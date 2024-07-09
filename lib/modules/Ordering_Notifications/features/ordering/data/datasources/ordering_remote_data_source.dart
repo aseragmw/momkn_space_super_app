@@ -1,0 +1,92 @@
+import 'dart:developer';
+
+import 'package:super_app/modules/Ordering_Notifications/core/network/api_caller.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/ordering/data/models/invoice_model.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/ordering/data/models/order_model.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/ordering/data/models/order_with_invoice_model.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/ordering/domain/entities/invoice_entity.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/ordering/domain/entities/order_entity.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/ordering/domain/entities/order_with_invoice_entity.dart';
+
+abstract class OrderingRemoteDataSource {
+  Future<List<OrderWithInvoiceEntity>> getOrdersWithInvoices();
+  Future<OrderEntity> createOrder();
+  Future<InvoiceEntity> createInvoice();
+}
+
+class OrderingRemoteDataSourceImplWithDio extends OrderingRemoteDataSource {
+  @override
+  Future<OrderEntity> createOrder() async {
+    try {
+      final jsonRes = await ApiCaller.postHTTP(
+          '/order/',
+          {
+            "order": {
+              "organization_ID": "663cf8d5831af4f499b4bdb6",
+              "Username": "Ahmed Serag from the app",
+              "Order_Amount": 200.50,
+              "Paid": "Partial",
+              "Paid_Amount": 200.50,
+              "user_Mobile_Number": "3"
+            },
+            "SKUs": [
+              {"SKU": "66460ede80df673c4ecb5f14", "count": 32}
+            ]
+          },
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA1MDg4MjgsImV4cCI6MTcyMDU5NTIyOH0.yOztvBs4eVNLBSbxJPPvGrkRk3RBn7ZlkFymLM0UgvU");
+      log(jsonRes.data.toString());
+      final OrderModel order = OrderModel.fromJson(jsonRes.data);
+      await createInvoicee(order);
+      return order;
+    } catch (e) {
+      log("${e.toString()} error in create orderr in remote datasource");
+      rethrow;
+    }
+  }
+
+  Future<InvoiceEntity> createInvoicee(OrderEntity order) async {
+    try {
+      final jsonRes = await ApiCaller.postHTTP(
+          '/invoice/create',
+          {
+            "payment_Option": "card",
+            "organization_Id": "663cf8d5831af4f499b4bdb6",
+            "order_Id": order.orderId,
+            "username": "John Doe",
+            "invoice_Amount": double.parse(order.orderAmount)
+          },
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA1MDg4MjgsImV4cCI6MTcyMDU5NTIyOH0.yOztvBs4eVNLBSbxJPPvGrkRk3RBn7ZlkFymLM0UgvU");      final invoice = InvoiceModel.fromJson(jsonRes.data);
+      return invoice;
+    } catch (e) {
+      log("${e.toString()} error in create invoice in remote datasource");
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<OrderWithInvoiceEntity>> getOrdersWithInvoices() async {
+    try {
+      final jsonRes = await ApiCaller.getHTTP('/order/', {"user_Mobile_Number": "3"},
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA1MDg4MjgsImV4cCI6MTcyMDU5NTIyOH0.yOztvBs4eVNLBSbxJPPvGrkRk3RBn7ZlkFymLM0UgvU");      List<OrderWithInvoiceEntity> ordersWithInvoices = [];
+      for (var element in jsonRes.data) {
+        log(element.toString());
+        if (element["invoice"] != null) {
+          final order = OrderModel.fromJson(element["order"]);
+          final invoice = InvoiceModel.fromJson(element["invoice"]);
+          final orderWithInvoice = OrderWithInvoiceModel(order: order, invoice: invoice);
+          ordersWithInvoices.add(orderWithInvoice);
+        }
+      }
+      return ordersWithInvoices;
+    } catch (e) {
+      log("${e.toString()} error in getOrdersWithInvoices in remote datasource");
+      rethrow;
+    }
+  }
+
+  @override
+  Future<InvoiceEntity> createInvoice() {
+    // TODO: implement createInvoice
+    throw UnimplementedError();
+  }
+}
