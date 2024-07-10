@@ -75,8 +75,7 @@ class OrdersHistoryScreen extends StatelessWidget {
           CustomButton(
             title: "Back",
             onPress: () {
-              //TODO add logic
-            },
+Navigator.of(context).pop();            },
             borderRadius: const BorderRadius.all(Radius.circular(100)),
             borderColor: AppTheme.transparentColor,
             buttonWidth: context.screenWidth * 0.3,

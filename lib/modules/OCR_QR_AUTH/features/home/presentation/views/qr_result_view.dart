@@ -1,7 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:super_app/modules/Ordering_Notifications/core/utils/snackbar_message.dart';
 
 import '../../../../constants.dart';
 import '../../../auth/presentation/manager/auth_cubit.dart';
@@ -118,6 +121,7 @@ class _QrResultViewState extends State<QrResultView> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
+                  log("hey");
                   setState(() {
                     isLoading = true;
                   });
@@ -126,6 +130,7 @@ class _QrResultViewState extends State<QrResultView> {
                   setState(() {
                     isLoading = false;
                   });
+                  SnackBarMessage.showSuccessSnackBar(message: "Confirmed Successfully", context: context);
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(

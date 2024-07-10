@@ -8,9 +8,9 @@ import 'package:super_app/shared/cache_constants.dart';
 class AppConstants {
   static UserModel? cachedCurrentUserObject;
 
-  static void initAppConstants() async {
+  static Future<void> initAppConstants() async {
     final cachedUserJson = CacheHelper.get(cachedUserCacheKey);
-    log(cachedUserJson.toString());
+    // log(cachedUserJson.toString());
     if (cachedUserJson != null) {
       cachedCurrentUserObject = UserModel.fromJson(jsonDecode(cachedUserJson));
     }

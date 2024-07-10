@@ -22,3 +22,18 @@ class GetCatalogsCategoriesSubCategoriesSuccessState extends ProductsState {
 
   const GetCatalogsCategoriesSubCategoriesSuccessState({required this.catalogs});
 }
+
+
+class GetBrandsWithSKUsLoadingState extends ProductsState {}
+
+class GetBrandsWithSKUsErrorState extends ProductsState {
+  final String message;
+
+  const GetBrandsWithSKUsErrorState({required this.message});
+}
+
+class GetBrandsWithSKUsSuccessState extends ProductsState {
+  final List<BrandEntity> brands;
+
+  const GetBrandsWithSKUsSuccessState({required this.brands});
+}

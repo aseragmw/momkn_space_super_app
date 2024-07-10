@@ -45,5 +45,26 @@ const String paymentReferenceAPIKey= "Payment_Reference";
   const String paymentReferenceInvoiceAPIKey = "payment_Reference";
   const String invoiceDateAPIKey = "invoice_Date";
 
+  //Brand Model
+const String subCategoryIdBrandAPIKey="subCategory_ID";
+const String brandNameAPIKey="brand_Name";
+const String paymentOptionsBrandAPIKey="payment_Option";
+const String brandStatusAPIKey="brand_Status";
+const String SKUsAPIKey="SKUs";
+const String brandIdAPIKey="brand_ID";
+
+//SKU Model
+const brandIdSKUAPIKey = "brand_ID";
+const skuNameSKUAPIKey = "SKU_name";
+const skuDescriptionSKUAPIKey = "SKU_description";
+const skuCostSKUAPIKey = "SKU_cost";
+const skuPriceSKUAPIKey = "SKU_price";
+const skuExtendedPriceOneSKUAPIKey = "SKU_extended_price_1";
+const skuExtendedPriceTwoSKUAPIKey = "SKU_extended_price_2";
+const activeSKUSKUAPIKey = "active_SKU";
+const skuIDSKUAPIKey = "SKU";
+
+
+
 
 

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 class ApiCaller {
-  static String url = 'http://10.90.12.51:54321';
+  static String url = 'https://erp-backend-supply.onrender.com/';
   static BaseOptions opts = BaseOptions(
     baseUrl: url,
     connectTimeout: const Duration(seconds: 40),

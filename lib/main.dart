@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:super_app/modules/OCR_QR_AUTH/features/auth/presentation/manager/auth_cubit.dart';
@@ -17,11 +21,28 @@ import 'package:super_app/modules/services/screens/Home/cubit/home_view_model.da
 import 'package:super_app/modules/services/screens/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:super_app/shared/app_constants.dart';
+// import 'package:firebase_options.dart';
 
 void main() async {
+  log("1");
   WidgetsFlutterBinding.ensureInitialized();
+  log("1");
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  log("1");
   await CacheHelper.init();
-  AppConstants.initAppConstants();
+  log("1");
+   await AppConstants.initAppConstants();
+  log("1");
+   if(AppConstants.cachedCurrentUserObject!=null){
+     log("1");
+     log("user id is ${AppConstants.cachedCurrentUserObject!.userID}");
+     log("1");
+
+   }
+  log("1");
+
+
+
   runApp(const MyApp());
 }
 

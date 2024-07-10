@@ -4,7 +4,10 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/data/datasources/products_remote_data_source.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/data/repositories/products_repository_impl.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/products/domain/entities/brand_entity.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/domain/entities/catalog_entity.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/products/domain/entities/sub_category_entity.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/products/domain/usecases/get_brands_usecase.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/domain/usecases/get_catalogs_categories_subcategories_usecase.dart';
 
 part 'products_event.dart';
@@ -25,6 +28,21 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         }, (r) {
           log("fel blocccc");
           emit(GetCatalogsCategoriesSubCategoriesSuccessState(catalogs: r));
+        });
+      },
+    );
+
+    on<GetBrandsWithSKUsEvent>(
+          (event, emit) async {
+        emit(GetBrandsWithSKUsLoadingState());
+        GetBrandsUsecase getBrandsUsecase = GetBrandsUsecase(
+            productsRepository: ProductsRepositoryImpl(productsRemoteDataSource: ProductsRemoteDataSourceImplWithDio()));
+        final either = await getBrandsUsecase.call(event.subCategoryEntity);
+        either.fold((l) {
+          emit(GetBrandsWithSKUsErrorState(message: l.message));
+        }, (r) {
+          log("fel blocccc");
+          emit(GetBrandsWithSKUsSuccessState(brands: r));
         });
       },
     );

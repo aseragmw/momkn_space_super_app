@@ -44,8 +44,7 @@ class OrderDetailsScreen extends StatelessWidget {
             child: CustomButton(
               title: "Back",
               onPress: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) => const WholesalersScreenScreen()));
-              },
+Navigator.of(context).pop();              },
               borderRadius: const BorderRadius.all( Radius.circular(100)),
               borderColor: AppTheme.transparentColor,
               buttonWidth: context.screenWidth * 0.3,

@@ -28,7 +28,7 @@ class PaymentSummaryWidget extends StatelessWidget {
                     style: TextStyle(fontSize: AppTheme.fontSize16(context), fontWeight: AppTheme.fontWeight600),
                   ),
                   Text(
-                    "$basketItems \$",
+                    "${basketItems.toStringAsFixed(2)} \$",
                     style: TextStyle(
                         fontSize: AppTheme.fontSize16(context), color: AppTheme.primaryGreenColor, fontWeight: AppTheme.fontWeight600),
                   )
@@ -45,7 +45,7 @@ class PaymentSummaryWidget extends StatelessWidget {
                     style: TextStyle(fontSize: AppTheme.fontSize16(context), fontWeight: AppTheme.fontWeight600),
                   ),
                   Text(
-                    "$shippingFees \$",
+                    "${shippingFees.toStringAsFixed(2)} \$",
                     style: TextStyle(
                         fontSize: AppTheme.fontSize16(context), color: AppTheme.primaryGreenColor, fontWeight: AppTheme.fontWeight600),
                   )
@@ -62,7 +62,7 @@ class PaymentSummaryWidget extends StatelessWidget {
                     style: TextStyle(fontSize: AppTheme.fontSize16(context), fontWeight: AppTheme.fontWeight600),
                   ),
                   Text(
-                    "${(basketItems) + (shippingFees)} \$",
+                    "${((basketItems) *0.2).toStringAsFixed(2)} \$",
                     style: TextStyle(
                         fontSize: AppTheme.fontSize16(context), color: AppTheme.primaryGreenColor, fontWeight: AppTheme.fontWeight600),
                   )
@@ -88,7 +88,7 @@ class PaymentSummaryWidget extends StatelessWidget {
                     style: TextStyle(fontSize: AppTheme.fontSize16(context), fontWeight: AppTheme.fontWeight600),
                   ),
                   Text(
-                    "${(basketItems) + (shippingFees)} \$",
+                    "${((basketItems) + (shippingFees) +((basketItems) *0.2)).toStringAsFixed(2) } \$",
                     style: TextStyle(
                         fontSize: AppTheme.fontSize16(context), color: AppTheme.primaryGreenColor, fontWeight: AppTheme.fontWeight600),
                   )

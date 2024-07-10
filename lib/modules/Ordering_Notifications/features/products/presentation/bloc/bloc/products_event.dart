@@ -10,3 +10,9 @@ sealed class ProductsEvent extends Equatable {
 class GetCatalogsCategoriesSubCategoriesEvent extends ProductsEvent {
   const GetCatalogsCategoriesSubCategoriesEvent();
 }
+
+
+class GetBrandsWithSKUsEvent extends ProductsEvent {
+  final SubCategoryEntity subCategoryEntity;
+  const GetBrandsWithSKUsEvent(this.subCategoryEntity);
+}

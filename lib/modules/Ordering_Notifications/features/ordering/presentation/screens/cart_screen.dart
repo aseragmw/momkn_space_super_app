@@ -8,6 +8,7 @@ import 'package:super_app/modules/Ordering_Notifications/core/widgets/main_layou
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/ordering/presentation/screens/payment_methods_screen.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/ordering/presentation/widgets/payment_summary_widget.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/products/presentation/viewmodels/cart_viewmodel.dart';
 import 'package:super_app/widgets/cart_item_card_widget.dart';
 import 'package:super_app/widgets/powered_by_ahly_momkn_widget.dart';
 
@@ -24,7 +25,10 @@ class CartScreen extends StatelessWidget {
         CustomAppBar(
           title: Text(
             "My Cart",
-            style: TextStyle(fontSize: AppTheme.fontSize24(context), fontWeight: AppTheme.fontWeight700, color: AppTheme.primaryGreenColor),
+            style: TextStyle(
+                fontSize: AppTheme.fontSize24(context),
+                fontWeight: AppTheme.fontWeight700,
+                color: AppTheme.primaryGreenColor),
           ),
           trailingWidget: SvgPicture.asset(
             "assets/cart_icon.svg",
@@ -36,75 +40,43 @@ class CartScreen extends StatelessWidget {
         SizedBox(
           height: context.screenHeight * 0.025,
         ),
-        ListView(
+        if(CartViewModel.cartItems.isEmpty)Text("No Products Yet..",style: TextStyle(fontSize: AppTheme.fontSize24(context),color: AppTheme.primaryGreenColor,fontWeight: AppTheme.fontWeight500),),
+        ListView.builder(
           shrinkWrap: true,
+          itemCount: CartViewModel.cartItems.length,
           physics: const NeverScrollableScrollPhysics(),
-          children: [
-            CartItemCardWidget(
-              itemCount: 4,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: context.screenAspectRatio * 10),
-              child: const Divider(
-                color: AppTheme.orangeColor,
-              ),
-            ),
-            CartItemCardWidget(
-              itemCount: 4,
-            ),
-          ],
+          itemBuilder: (BuildContext context, int index) {
+            final item = CartViewModel.cartItems[index];
+            return CartItemCardWidget(
+              item: item,
+            );
+          },
         ),
-        SizedBox(
-          height: context.screenHeight * 0.025,
-        ),
-        Container(
-          width: context.screenWidth,
-          margin: EdgeInsets.symmetric(horizontal: context.screenAspectRatio * 5),
-          decoration: const BoxDecoration(borderRadius: AppTheme.boxRadius, color: AppTheme.whiteColor, boxShadow: [
-            BoxShadow(
-              color: AppTheme.greyHintColor, // Shadow color with opacity
-              spreadRadius: 1, // Spread radius
-              blurRadius: 7, // Blur radius
-              offset: Offset(1, 1), // Offset in X and Y directions
-            ),
-          ]),
-          padding: EdgeInsets.symmetric(horizontal: context.screenAspectRatio * 8, vertical: context.screenAspectRatio * 2),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                  child: TextField(
-                controller: couponCodeTextController,
-                decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Promocode",
-                    hintStyle: TextStyle(color: AppTheme.primaryGreenColor, fontWeight: AppTheme.fontWeight500)),
-              )),
-              InkWell(
-                child: Container(
-                    decoration: const BoxDecoration(borderRadius: AppTheme.boxRadius, color: AppTheme.primaryGreenColor),
-                    padding: EdgeInsets.all(context.screenAspectRatio * 5),
-                    child: const Text(
-                      "Submit",
-                      style: TextStyle(color: AppTheme.whiteColor, fontWeight: AppTheme.fontWeight600),
-                    )),
-                onTap: () {},
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: context.screenHeight * 0.025,
-        ),
-        const PaymentSummaryWidget(
-          hasPadding: true,
-          basketItems: 100,
-          shippingFees: 20,
-        ),
+        // ListView(
+        //   shrinkWrap: true,
+        //   physics: const NeverScrollableScrollPhysics(),
+        //   children: [
+        //     CartItemCardWidget(
+        //       itemCount: 4,
+        //     ),
+        //     Padding(
+        //       padding: EdgeInsets.symmetric(
+        //           horizontal: context.screenAspectRatio * 10),
+        //       child: const Divider(
+        //         color: AppTheme.orangeColor,
+        //       ),
+        //     ),
+        //     CartItemCardWidget(
+        //       itemCount: 4,
+        //     ),
+        //   ],
+        // ),
+        SizedBox(height: context.screenAspectRatio*20,),
         CustomButton(
           title: "Continue To Payment",
           onPress: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PaymentMethodsScreen()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const PaymentMethodsScreen()));
           },
           borderRadius: const BorderRadius.all(Radius.circular(100)),
           borderColor: AppTheme.transparentColor,
@@ -112,7 +84,10 @@ class CartScreen extends StatelessWidget {
           fontSize: AppTheme.fontSize20(context),
           buttonColor: null,
           buttonHeight: context.screenWidth * 0.3 * 0.4,
-          gradientColors: const [AppTheme.primaryGreenColor, AppTheme.orangeColor],
+          gradientColors: const [
+            AppTheme.primaryGreenColor,
+            AppTheme.orangeColor
+          ],
         ),
         SizedBox(
           height: context.screenHeight * 0.025,

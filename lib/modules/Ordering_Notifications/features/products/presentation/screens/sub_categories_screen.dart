@@ -4,6 +4,7 @@ import 'package:super_app/modules/Ordering_Notifications/core/utils/app_theme.da
 import 'package:super_app/modules/Ordering_Notifications/core/widgets/custom_app_bar.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/widgets/main_layout.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/domain/entities/category_entity.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/products/presentation/screens/brands_screen.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/presentation/widgets/catalog_category_card.dart';
 
 class SubCategoriesScreen extends StatelessWidget {
@@ -40,7 +41,9 @@ class SubCategoriesScreen extends StatelessWidget {
           itemCount: category.subCategories.length,
           itemBuilder: (context, index) {
             final subCategory = category.subCategories[index];
-            return CatalogCategoryCardWidget(title: subCategory.subCategoryName, imgUrl: "assets/product2.png");
+            return InkWell(onTap:(){
+              Navigator.of(context).push(MaterialPageRoute(builder: (_)=>BrandsScreen(subCategoryEntity: subCategory)));
+            },child: CatalogCategoryCardWidget(title: subCategory.subCategoryName, imgUrl: "assets/product2.png"));
           },
         )
         // GridView(

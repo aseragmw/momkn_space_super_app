@@ -35,10 +35,12 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       Map<String, dynamic> data = await ApiService.login(userEmail: userEmail, userNID: userNID, userPass: userPass);
       if (data['message'] == 'Login successful') {
-        user = UserModel();
+        // user = UserModel();
         user = UserModel.fromJson(data['user']);
+        log("user id from datasource is ${user.userID}");
         await CacheHelper.put(cachedUserCacheKey, user.toJson());
-        AppConstants.initAppConstants();
+        await AppConstants.initAppConstants();
+        log("user id after caching is ${AppConstants.cachedCurrentUserObject!.userID}");
 
         emit(LoginSuccessState());
       } else if (data['message'] == 'National ID does not match') {
@@ -61,6 +63,6 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> scanQrCode({required String consumerId}) async {
-    await ApiService.scanQrCode(agentId: user.userID!, consumerId: consumerId);
+    await ApiService.scanQrCode(agentId: AppConstants.cachedCurrentUserObject!.userID!, consumerId: consumerId);
   }
 }

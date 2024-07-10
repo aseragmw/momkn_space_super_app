@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_size.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/extentions/string_extensions.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/products/domain/entities/catalog_entity.dart';
 
 import '../../../../../../shared/app_constants.dart';
 import '../../../../../Ordering_Notifications/core/utils/app_theme.dart';
@@ -42,7 +43,7 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
   }
 
   final cardColors = [AppTheme.orangeColor, AppTheme.lightGreenColor, AppTheme.mustardColor, AppTheme.primaryGreenColor];
-
+  List<CatalogEntity> catalogs =[];
   @override
   Widget build(BuildContext context) {
     context.read<ProductsBloc>().add(const GetCatalogsCategoriesSubCategoriesEvent());
@@ -221,9 +222,9 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                             const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                BillWidget(billTitle: "First Bill"),
-                                BillWidget(billTitle: "Second Bill"),
-                                BillWidget(billTitle: "Third Bill"),
+                                BillWidget(billTitle: "Telecom"),
+                                BillWidget(billTitle: "Electricity"),
+                                BillWidget(billTitle: "Water"),
                               ],
                             ),
                             SizedBox(
@@ -233,7 +234,7 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Services Booking List",
+                                  "Services",
                                   style: TextStyle(fontSize: AppTheme.fontSize18(context), fontWeight: AppTheme.fontWeight600),
                                 ),
                                 InkWell(
@@ -280,7 +281,7 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Catalogs",
+                                  "Order Now",
                                   style: TextStyle(fontSize: AppTheme.fontSize18(context), fontWeight: AppTheme.fontWeight600),
                                 ),
                                 InkWell(
@@ -306,34 +307,33 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                                   return const CustomCircularProgressIndicator(
                                     color: AppTheme.primaryGreenColor,
                                   );
-                                } else if (state is GetCatalogsCategoriesSubCategoriesSuccessState) {
-                                  return ListView.builder(
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    padding: EdgeInsets.zero,
-                                    shrinkWrap: true,
-                                    itemCount: 5,
-                                    itemBuilder: (context, index) {
-                                      final catalog = state.catalogs[index];
-                                      return InkWell(
-                                        onTap: () {
-                                          Navigator.of(context).push(MaterialPageRoute(
-                                            builder: (context) => CategoriesScreen(catalog: catalog),
-                                          ));
-                                        },
-                                        child: OrderNowWidget(
-                                            serviceTitle: state.catalogs[index].catalogName,
-                                            icon: Icons.shield,
-                                            backgroundColor: cardColors[index % 4]),
-                                      );
-                                    },
-                                  );
-                                } else {
-                                  return const SizedBox();
-                                }
+                                }  return ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  itemCount: catalogs.length>5?5:catalogs.length,
+                                  itemBuilder: (context, index) {
+                                    final catalog = catalogs[index];
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) => CategoriesScreen(catalog: catalog),
+                                        ));
+                                      },
+                                      child: OrderNowWidget(
+                                          serviceTitle: catalogs[index].catalogName,
+                                          icon: Icons.shield,
+                                          backgroundColor: cardColors[index % 4]),
+                                    );
+                                  },
+                                );
                               },
                               listener: (context, state) {
                                 if (state is GetCatalogsCategoriesSubCategoriesErrorState) {
                                   SnackBarMessage.showErrorSnackBar(message: state.message, context: context);
+                                }
+                                else if (state is GetCatalogsCategoriesSubCategoriesSuccessState){
+                                  catalogs = state.catalogs;
                                 }
                               },
                             ),

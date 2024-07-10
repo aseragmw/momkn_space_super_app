@@ -53,7 +53,7 @@ class OrderHistoryItem extends StatelessWidget {
               style: TextStyle(fontWeight: AppTheme.fontWeight700, fontSize: AppTheme.fontSize16(context)),
             ),
             Text(
-              "Total: ${orderWithInvoice.invoice.invoiceAmount}\$",
+              "Total: ${orderWithInvoice.invoice.invoiceAmount.toStringAsFixed(2)}\$",
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontWeight: AppTheme.fontWeight700, fontSize: AppTheme.fontSize16(context), color: AppTheme.blackColor),
             )

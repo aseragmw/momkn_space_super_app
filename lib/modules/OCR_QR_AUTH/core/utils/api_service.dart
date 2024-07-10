@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import '../models/user_model.dart';
@@ -81,6 +82,7 @@ class ApiService {
   static Future<Map<String, dynamic>> scanQrCode({required String agentId, required String consumerId}) async {
     final Dio dio = Dio();
     final Map<String, dynamic> data = {"agentId": agentId, "consumerId": consumerId};
+    log("hena");
     final Response response = await dio.post(
       scanQrCodeBaseUrl,
       data: data,
