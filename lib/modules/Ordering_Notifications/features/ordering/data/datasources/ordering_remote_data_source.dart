@@ -14,6 +14,8 @@ abstract class OrderingRemoteDataSource {
   Future<OrderEntity> createOrder();
   Future<InvoiceEntity> createInvoice();
 }
+const String myoken ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA2MDUxODcsImV4cCI6MTcyMDY5MTU4N30.MI1NnkKHB8FHHob0eaKTmW3yllZWbhks9vAgurFu4nQ";
+
 
 class OrderingRemoteDataSourceImplWithDio extends OrderingRemoteDataSource {
   @override
@@ -37,7 +39,7 @@ class OrderingRemoteDataSourceImplWithDio extends OrderingRemoteDataSource {
             },
             "SKUs": SKUS
           },
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA1MDg4MjgsImV4cCI6MTcyMDU5NTIyOH0.yOztvBs4eVNLBSbxJPPvGrkRk3RBn7ZlkFymLM0UgvU");
+          myoken);
       log(jsonRes.data.toString());
       final OrderModel order = OrderModel.fromJson(jsonRes.data);
       await createInvoicee(order);
@@ -60,7 +62,8 @@ class OrderingRemoteDataSourceImplWithDio extends OrderingRemoteDataSource {
             "username": "Ahmed Serag",
             "invoice_Amount": double.parse(order.orderAmount)
           },
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA1MDg4MjgsImV4cCI6MTcyMDU5NTIyOH0.yOztvBs4eVNLBSbxJPPvGrkRk3RBn7ZlkFymLM0UgvU");      final invoice = InvoiceModel.fromJson(jsonRes.data);
+          myoken);
+      final invoice = InvoiceModel.fromJson(jsonRes.data);
       return invoice;
     } catch (e) {
       log("${e.toString()} error in create invoice in remote datasource");
@@ -72,7 +75,8 @@ class OrderingRemoteDataSourceImplWithDio extends OrderingRemoteDataSource {
   Future<List<OrderWithInvoiceEntity>> getOrdersWithInvoices() async {
     try {
       final jsonRes = await ApiCaller.getHTTP('/order/', {"user_Mobile_Number": "3"},
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA1MDg4MjgsImV4cCI6MTcyMDU5NTIyOH0.yOztvBs4eVNLBSbxJPPvGrkRk3RBn7ZlkFymLM0UgvU");      List<OrderWithInvoiceEntity> ordersWithInvoices = [];
+          myoken);
+      List<OrderWithInvoiceEntity> ordersWithInvoices = [];
       for (var element in jsonRes.data) {
         log(element.toString());
         if (element["invoice"] != null) {

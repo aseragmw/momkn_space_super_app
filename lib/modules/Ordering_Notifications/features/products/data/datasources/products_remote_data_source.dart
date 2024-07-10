@@ -12,7 +12,7 @@ import 'package:super_app/modules/Ordering_Notifications/features/products/domai
 import 'package:super_app/modules/Ordering_Notifications/features/products/domain/entities/sub_category_entity.dart';
 
 import '../models/brand_model.dart';
-
+const String myoken ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA2MDUxODcsImV4cCI6MTcyMDY5MTU4N30.MI1NnkKHB8FHHob0eaKTmW3yllZWbhks9vAgurFu4nQ";
 abstract class ProductsRemoteDataSource {
   Future<List<CatalogEntity>> getCatalosCategoriesSubCategories();
   Future<List<BrandModel>> getBrands(SubCategoryEntity subCategoryEntity);
@@ -26,7 +26,7 @@ class ProductsRemoteDataSourceImplWithDio extends ProductsRemoteDataSource {
       final jsonRes = await ApiCaller.getHTTP(
           '/catalogTree/get/663cf8d5831af4f499b4bdb6',
           null,
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA1MDg4MjgsImV4cCI6MTcyMDU5NTIyOH0.yOztvBs4eVNLBSbxJPPvGrkRk3RBn7ZlkFymLM0UgvU");
+myoken);
       List<CatalogModel> catalogs = [];
       for (var catalogJson in jsonRes.data) {
         List<CategoryModel> categories = [];
@@ -53,7 +53,7 @@ class ProductsRemoteDataSourceImplWithDio extends ProductsRemoteDataSource {
       final jsonRes = await ApiCaller.getHTTP(
           '/sku/get/${brandEntity.brandId}',
           null,
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA1MDg4MjgsImV4cCI6MTcyMDU5NTIyOH0.yOztvBs4eVNLBSbxJPPvGrkRk3RBn7ZlkFymLM0UgvU");
+          myoken);
       List<SKUModel> SKUs = [];
       for (var skuJson in jsonRes.data) {
         SKUs.add(SKUModel.fromJson(skuJson));
@@ -70,7 +70,7 @@ class ProductsRemoteDataSourceImplWithDio extends ProductsRemoteDataSource {
       final jsonRes = await ApiCaller.getHTTP(
           '/sku/get/$brandId',
           null,
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA1MDg4MjgsImV4cCI6MTcyMDU5NTIyOH0.yOztvBs4eVNLBSbxJPPvGrkRk3RBn7ZlkFymLM0UgvU");
+          myoken);
       List<SKUModel> SKUs = [];
       for (var skuJson in jsonRes.data) {
         SKUs.add(SKUModel.fromJson(skuJson));
@@ -92,7 +92,7 @@ class ProductsRemoteDataSourceImplWithDio extends ProductsRemoteDataSource {
       final jsonRes = await ApiCaller.getHTTP(
           '/brand/get/${subCategoryEntity.subCategoryId}',
           null,
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA1MDg4MjgsImV4cCI6MTcyMDU5NTIyOH0.yOztvBs4eVNLBSbxJPPvGrkRk3RBn7ZlkFymLM0UgvU");
+          myoken);
       List<BrandModel> brands = [];
       for (var brandJson in jsonRes.data) {
          final List<SKUEntity> skus = await getSKUsByBrandId(brandJson[brandIdAPIKey]);
@@ -109,7 +109,7 @@ class ProductsRemoteDataSourceImplWithDio extends ProductsRemoteDataSource {
 Future<List<CategoryModel>> getCategories(String catalogId) async {
   try {
     final jsonRes = await ApiCaller.getHTTP('/category/get/$catalogId', null,
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA1MDg4MjgsImV4cCI6MTcyMDU5NTIyOH0.yOztvBs4eVNLBSbxJPPvGrkRk3RBn7ZlkFymLM0UgvU");
+        myoken);
     List<CategoryModel> categories = [];
     for (var categoryJson in jsonRes.data) {
       List<SubCategoryModel> subCategories = [];
@@ -134,7 +134,7 @@ Future<List<SubCategoryModel>> getSubCategories(String categoryId) async {
     final jsonRes = await ApiCaller.getHTTP(
         '/subCategory/get/$categoryId',
         null,
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA1MDg4MjgsImV4cCI6MTcyMDU5NTIyOH0.yOztvBs4eVNLBSbxJPPvGrkRk3RBn7ZlkFymLM0UgvU");
+        myoken);
     List<SubCategoryModel> subCategories = [];
     for (var subCategoryJson in jsonRes.data) {
       subCategories.add(SubCategoryModel(
