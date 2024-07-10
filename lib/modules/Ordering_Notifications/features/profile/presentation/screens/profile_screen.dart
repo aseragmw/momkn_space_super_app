@@ -9,6 +9,7 @@ import 'package:super_app/modules/Ordering_Notifications/core/widgets/custom_but
 import 'package:super_app/modules/Ordering_Notifications/core/widgets/main_layout.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/ordering/presentation/screens/orders_history_screen.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/profile/presentation/widgets/profile_attribute_widget.dart';
+import 'package:super_app/modules/gaming/super_screens/super_type_handling_screen.dart' hide CustomButton;
 import 'package:super_app/shared/app_constants.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -49,6 +50,23 @@ class ProfileScreen extends StatelessWidget {
 
           SizedBox(
             height: context.screenHeight * 0.02,
+          ),
+          SizedBox(
+            height: context.screenHeight * 0.02,
+          ),
+          CustomButton(
+            title: 'Community Games',
+            onPress: ()  {
+
+              Navigator.of(context).push(MaterialPageRoute(builder: (_)=>SuperTypeHandlingScreen()));
+
+            },
+            buttonColor: AppTheme.primaryGreenColor,
+            borderRadius: AppTheme.boxRadius,
+            borderColor: AppTheme.primaryGreenColor,
+            buttonWidth: context.screenWidth * 0.7,
+            fontSize: AppTheme.fontSize16(context),
+            fontColor: AppTheme.whiteColor,
           ),
           SizedBox(
             height: context.screenHeight * 0.02,
@@ -96,3 +114,4 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
+

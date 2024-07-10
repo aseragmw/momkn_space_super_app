@@ -21,13 +21,12 @@ import 'package:super_app/modules/services/screens/Home/cubit/home_view_model.da
 import 'package:super_app/modules/services/screens/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:super_app/shared/app_constants.dart';
-// import 'package:firebase_options.dart';
 
 void main() async {
   log("1");
   WidgetsFlutterBinding.ensureInitialized();
   log("1");
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp();
   log("1");
   await CacheHelper.init();
   log("1");

@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_size.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/extentions/string_extensions.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/domain/entities/catalog_entity.dart';
+import 'package:super_app/modules/gaming/super_screens/super_type_handling_screen.dart';
 
 import '../../../../../../shared/app_constants.dart';
 import '../../../../../Ordering_Notifications/core/utils/app_theme.dart';
@@ -113,10 +114,14 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                                     alignment: Alignment.centerRight,
                                     child: Padding(
                                       padding: EdgeInsets.only(right: context.screenAspectRatio * 15),
-                                      child: Icon(
-                                        Icons.notifications_outlined,
-                                        color: AppTheme.whiteColor,
-                                        size: context.screenAspectRatio * 15,
+                                      child: InkWell(
+                                        onTap: (){
+                                        },
+                                        child: Icon(
+                                          Icons.notifications_outlined,
+                                          color: AppTheme.whiteColor,
+                                          size: context.screenAspectRatio * 15,
+                                        ),
                                       ),
                                     )),
                                 Align(
