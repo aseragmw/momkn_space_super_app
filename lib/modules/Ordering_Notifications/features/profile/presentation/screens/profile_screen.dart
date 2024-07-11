@@ -57,9 +57,7 @@ class ProfileScreen extends StatelessWidget {
           CustomButton(
             title: 'Community Games',
             onPress: ()  {
-
               Navigator.of(context).push(MaterialPageRoute(builder: (_)=>SuperTypeHandlingScreen()));
-
             },
             buttonColor: AppTheme.primaryGreenColor,
             borderRadius: AppTheme.boxRadius,

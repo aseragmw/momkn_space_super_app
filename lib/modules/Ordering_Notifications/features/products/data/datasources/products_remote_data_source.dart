@@ -12,7 +12,7 @@ import 'package:super_app/modules/Ordering_Notifications/features/products/domai
 import 'package:super_app/modules/Ordering_Notifications/features/products/domain/entities/sub_category_entity.dart';
 
 import '../models/brand_model.dart';
-const String myToken ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA2MDUxODcsImV4cCI6MTcyMDY5MTU4N30.MI1NnkKHB8FHHob0eaKTmW3yllZWbhks9vAgurFu4nQ";
+const String myToken ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA2OTkxMjMsImV4cCI6MTcyMDc4NTUyM30.RNLw461_Km6IbVsiwgcHZwQWTJ-XH2LroKYUsVNWRdE";
 abstract class ProductsRemoteDataSource {
   Future<List<CatalogEntity>> getCatalosCategoriesSubCategories();
   Future<List<BrandModel>> getBrands(SubCategoryEntity subCategoryEntity);

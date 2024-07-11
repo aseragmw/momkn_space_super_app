@@ -2,7 +2,10 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_size.dart';
+import 'package:super_app/modules/Ordering_Notifications/core/utils/app_theme.dart';
 import 'package:super_app/modules/gaming/super_consts/strings.dart';
 
 class SuperPlayerClubsScreen extends StatefulWidget {
@@ -143,7 +146,7 @@ class _SuperPlayerClubsScreenState extends State<SuperPlayerClubsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color.fromRGBO(26, 27, 47, 1),
+        backgroundColor: AppTheme.screenBackgroundColor,
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
             : errorMessage.isNotEmpty
@@ -155,23 +158,67 @@ class _SuperPlayerClubsScreenState extends State<SuperPlayerClubsScreen> {
                   )
                 : Column(
                     children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.21,
+                        decoration: const BoxDecoration(
+                            color: AppTheme.transparentColor),
+                        child: Stack(children: [
+                          Container(
+                            decoration: const BoxDecoration(
+                                color: Color(0xFF0A271D),
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(40),
+                                    bottomRight: Radius.circular(40))),
+                            height: context.screenHeight * 0.2,
+                            child: Stack(
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/ahly_momkn_bg_home.svg",
+                                  width: context.screenWidth,
+                                  fit: BoxFit.fill,
+                                ),
+                                Align(
+                                  child: Image.asset(
+                                    "assets/logo.png",
+                                    height: context.screenAspectRatio * 50,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding:  EdgeInsets.only(left: context.screenAspectRatio*10),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Icon(Icons.arrow_back_ios_new,color: AppTheme.whiteColor,size: context.screenAspectRatio*16,),
+                              ),
+                            ),
+                          )
+                        ]),
+                      ),
+
                       ClueTimer(
                         onTimeUp: _skipQuestion,
                         controller: _clueTimerController,
                       ),
                       const SizedBox(height: 20),
-                      SizedBox(
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: context.screenAspectRatio*15),
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: _skipQuestion,
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                const Color.fromARGB(255, 76, 98, 124),
-                          ),
+AppTheme.orangeColor                          ),
                           child: const Text(
                             "Skip question",
                             style: TextStyle(
-                              color: Colors.red,
+                              color: Colors.white,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -180,26 +227,29 @@ class _SuperPlayerClubsScreenState extends State<SuperPlayerClubsScreen> {
                       const SizedBox(height: 20),
                       Text(
                         "your answer is: \t ${_answerController.text}",
-                        style: const TextStyle(color: Colors.green),
+                        style:  TextStyle(color: AppTheme.primaryGreenColor,fontSize: AppTheme.fontSize18(context)),
                       ),
                       const SizedBox(height: 10),
-                      TextField(
-                        controller: _answerController,
-                        decoration: const InputDecoration(
-                          hintText: 'Enter your answer',
-                          hintStyle: TextStyle(color: Colors.white70),
-                          border: OutlineInputBorder(),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white70),
+                      Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: context.screenAspectRatio*5),
+                        child: TextField(
+                          controller: _answerController,
+                          decoration: const InputDecoration(
+                            hintText: 'Enter your answer',
+                            hintStyle: TextStyle(color: Colors.white),
+                            border: OutlineInputBorder(),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white70),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            fillColor: AppTheme.primaryGreenColor,
+                            filled: true,
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          fillColor: Color.fromRGBO(49, 71, 94, 1),
-                          filled: true,
+                          style: const TextStyle(color: Colors.white),
+                          onChanged: _filterAnswers,
                         ),
-                        style: const TextStyle(color: Colors.white),
-                        onChanged: _filterAnswers,
                       ),
                       const SizedBox(height: 10),
                       filteredAnswers.isEmpty
@@ -245,18 +295,21 @@ class _SuperPlayerClubsScreenState extends State<SuperPlayerClubsScreen> {
                               return Column(
                                 children: [
                                   Container(
+                                    margin: EdgeInsets.symmetric(horizontal: context.screenAspectRatio*15,vertical: context.screenAspectRatio*5),
                                     width: double.infinity,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 15.0),
+                                    padding:  EdgeInsets.symmetric(
+                                        vertical: context.screenAspectRatio*8),
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
+                                      borderRadius: AppTheme.boxRadius,
                                       border: Border.all(
-                                          color: Colors.white, width: 2),
+                                          color: AppTheme.primaryGreenColor, width: 2),
                                     ),
                                     child: Text(
                                       clubs[index],
-                                      style: const TextStyle(
-                                        color: Colors.white,
+                                      style:  TextStyle(
+                                        color: AppTheme.primaryGreenColor,
+                                        fontSize: AppTheme.fontSize16(context),
                                         fontWeight: FontWeight.w700,
                                       ),textAlign: TextAlign.center,
                                     ),
@@ -264,7 +317,7 @@ class _SuperPlayerClubsScreenState extends State<SuperPlayerClubsScreen> {
                                   if (index < clubs.length - 1)
                                     const Icon(
                                       Icons.arrow_downward,
-                                      color: Colors.white,
+                                      color: AppTheme.orangeColor,
                                     ),
                                 ],
                               );
@@ -335,7 +388,7 @@ class _ClueTimerState extends State<ClueTimer> {
     final seconds = (_timeRemaining % 60).toString().padLeft(2, '0');
     return Text(
       "Time remaining: $minutes:$seconds",
-      style: const TextStyle(color: Colors.white),
+      style:  TextStyle(color: AppTheme.primaryGreenColor),
     );
   }
 }

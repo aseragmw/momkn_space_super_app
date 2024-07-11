@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:super_app/modules/Ordering_Notifications/core/utils/app_theme.dart';
 
 class LoadingScreen extends StatelessWidget {
   const LoadingScreen(
@@ -12,11 +13,11 @@ class LoadingScreen extends StatelessWidget {
         child,
         if (isLoading) ...[
           Container(
-            color: Colors.black.withOpacity(0.7),
+            color: AppTheme.screenBackgroundColor,
           ),
-          const Center(
+           Center(
               child: CircularProgressIndicator(
-            color: Colors.red,
+            color: AppTheme.primaryGreenColor,
           ))
         ]
       ],

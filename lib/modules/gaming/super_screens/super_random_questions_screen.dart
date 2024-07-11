@@ -2,7 +2,10 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_size.dart';
+import 'package:super_app/modules/Ordering_Notifications/core/utils/app_theme.dart';
 import 'package:super_app/modules/gaming/super_consts/strings.dart';
 
 class SuperRandomQuestionsScreen extends StatefulWidget {
@@ -170,7 +173,7 @@ class _SuperRandomQuestionsScreenState
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color.fromRGBO(26, 27, 47, 1),
+        backgroundColor: AppTheme.screenBackgroundColor,
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
             : errorMessage.isNotEmpty
@@ -182,10 +185,55 @@ class _SuperRandomQuestionsScreenState
                   )
                 : SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(0),
                       child: Column(
                         children: [
-                          
+
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.21,
+                            decoration: const BoxDecoration(
+                                color: AppTheme.transparentColor),
+                            child: Stack(children: [
+                              Container(
+                                decoration: const BoxDecoration(
+                                    color: Color(0xFF0A271D),
+                                    borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(40),
+                                        bottomRight: Radius.circular(40))),
+                                height: context.screenHeight * 0.2,
+                                child: Stack(
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/ahly_momkn_bg_home.svg",
+                                      width: context.screenWidth,
+                                      fit: BoxFit.fill,
+                                    ),
+                                    Align(
+                                      child: Image.asset(
+                                        "assets/logo.png",
+                                        height: context.screenAspectRatio * 50,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding:  EdgeInsets.only(left: context.screenAspectRatio*10),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Icon(Icons.arrow_back_ios_new,color: AppTheme.whiteColor,size: context.screenAspectRatio*16,),
+                                  ),
+                                ),
+                              )
+                            ]),
+                          ),
+
+
                           const SizedBox(height: 10),
                           ClueTimer(
                             onTimeUp: _skipQuestion,
@@ -203,12 +251,12 @@ class _SuperRandomQuestionsScreenState
                               onPressed: _skipQuestion,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
-                                    const Color.fromARGB(255, 76, 98, 124),
+                                    AppTheme.orangeColor
                               ),
                               child: const Text(
                                 "Skip question",
                                 style: TextStyle(
-                                  color: Colors.red,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
@@ -230,11 +278,11 @@ class _SuperRandomQuestionsScreenState
         Container(
           padding: const EdgeInsets.all(6.0),
           decoration: const BoxDecoration(
-            color: Color.fromARGB(255, 41, 53, 67),
+            color: AppTheme.whiteColor,
           ),
           child: Text(
             question,
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.black),
             textAlign: TextAlign.end,
           ),
         ),
@@ -256,7 +304,7 @@ class _SuperRandomQuestionsScreenState
             controller: _answerControllers[questionIndex],
             decoration: const InputDecoration(
               hintText: 'Enter your answer',
-              hintStyle: TextStyle(color: Colors.white70),
+              hintStyle: TextStyle(color: Colors.white),
               border: OutlineInputBorder(),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.white70),
@@ -264,7 +312,7 @@ class _SuperRandomQuestionsScreenState
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.white),
               ),
-              fillColor: Color.fromRGBO(49, 71, 94, 1),
+              fillColor: AppTheme.primaryGreenColor,
               filled: true,
             ),
             style: const TextStyle(color: Colors.white),
@@ -366,7 +414,7 @@ class _ClueTimerState extends State<ClueTimer> {
     final seconds = (_timeRemaining % 60).toString().padLeft(2, '0');
     return Text(
       "Time remaining: $minutes:$seconds",
-      style: const TextStyle(color: Colors.white),
+      style: const TextStyle(color: AppTheme.primaryGreenColor),
     );
   }
 }

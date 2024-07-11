@@ -394,7 +394,7 @@ class ServicesBookingWidget extends StatelessWidget {
     return Column(
       children: [
         Container(
-            margin: EdgeInsets.only(bottom: context.screenAspectRatio * 3),
+            margin: EdgeInsets.only(bottom: context.screenAspectRatio * 3,right:context.screenAspectRatio * 3 ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
               color: backgroundColor,
