@@ -1,9 +1,8 @@
 
 
-import 'package:super_app/modules/services/domain/entities/agentCalenderEntity.dart';
-
 import '../../../domain/entities/AgentServiceResponseEntity.dart';
 import '../../../domain/entities/ServiceEntity.dart';
+import '../../../domain/entities/agentCalenderEntity.dart';
 
 abstract class ServiceStates{}
 

@@ -1,14 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:super_app/modules/services/domain/entities/AgentServiceResponseEntity.dart';
-import 'package:super_app/modules/services/domain/useCase/getAgentServices_useCase.dart';
-import 'package:super_app/modules/services/screens/AgentService/cubit/service_states.dart';
 
+import '../../domain/entities/AgentServiceResponseEntity.dart';
 import '../../domain/entities/ServiceEntity.dart';
 import '../../domain/useCase/AgentCalender_useCase.dart';
 import '../../domain/useCase/agentServiceById_useCase.dart';
+import '../../domain/useCase/getAgentServices_useCase.dart';
 import '../../domain/useCase/service_useCase.dart';
 import '../routes.dart';
+import 'agentServiceDetails.dart';
+import 'cubit/service_states.dart';
 import 'cubit/service_view_model.dart';
 
 class AgentServicesScreen extends StatefulWidget {
@@ -42,7 +44,7 @@ class _AgentServicesScreenState extends State<AgentServicesScreen> {
           if (state is ServiceLoadingState) {
             return Container(
               color: Colors.white, // Background color
-              child: const Center(
+              child: Center(
                 child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.green), // Indicator color
                   backgroundColor: Colors.white, // Background color of the progress indicator
@@ -56,12 +58,12 @@ class _AgentServicesScreenState extends State<AgentServicesScreen> {
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 leading: IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  icon: Icon(Icons.arrow_back, color: Colors.black),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
-                title: const Text(
+                title: Text(
                   'Agent Services',
                   style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                 ),
@@ -75,12 +77,12 @@ class _AgentServicesScreenState extends State<AgentServicesScreen> {
                       children: [
                         Expanded(
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
                             decoration: BoxDecoration(
                               color: Colors.white70,
                               borderRadius: BorderRadius.circular(30.0),
                             ),
-                            child: const Row(
+                            child: Row(
                               children: [
                                 Icon(Icons.search, color: Colors.green),
                                 SizedBox(height: 16.0),
@@ -96,14 +98,14 @@ class _AgentServicesScreenState extends State<AgentServicesScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 16.0),
+                        SizedBox(width: 16.0),
                         Container(
                           decoration: BoxDecoration(
-                            color: const Color(0xFF12A770),
+                            color: Color(0xFF12A770),
                             borderRadius: BorderRadius.circular(30.0),
                           ),
                           child: IconButton(
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.filter_list_outlined, color: Colors.white,),
                             onPressed: () {
                               // Filter action
@@ -113,7 +115,7 @@ class _AgentServicesScreenState extends State<AgentServicesScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16.0),
+                    SizedBox(height: 16.0),
                     Expanded(
                       child: ListView.builder(
                         itemCount: serviceViewModel.agentServiceList?.length,
@@ -128,7 +130,7 @@ class _AgentServicesScreenState extends State<AgentServicesScreen> {
             );
           }
           else{
-            return const Center(child: Text('Failed to load services'));
+            return Center(child: Text('Failed to load services'));
           }
         },
       ),
@@ -146,7 +148,7 @@ class ServiceItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15.0),
@@ -155,7 +157,7 @@ class ServiceItem extends StatelessWidget {
               color: Colors.grey.withOpacity(0.2),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: const Offset(0, 3),
+              offset: Offset(0, 3),
             ),
           ],
         ),
@@ -165,16 +167,16 @@ class ServiceItem extends StatelessWidget {
               width: 90,
               height: 90,
               decoration: BoxDecoration(
-                color: const Color(0xFFFA803C),
+                color: Color(0xFFFA803C),
                 borderRadius: BorderRadius.circular(15.0),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.ac_unit_rounded,
                 color: Colors.white,
                 size: 50,
               ), // Placeholder for the icon
             ),
-            const SizedBox(width: 16.0),
+            SizedBox(width: 16.0),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,17 +184,17 @@ class ServiceItem extends StatelessWidget {
                 children: [
                   Text(
                     service.agentEnglishName!,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
-                  const SizedBox(height: 8.0),
+                  SizedBox(height: 8.0),
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).pushNamed(serviceAgentDetailsRoute, arguments:service);
                     },
                     child: Container(
                       height: 30,
-                      padding: const EdgeInsets.fromLTRB(32, 10, 0, 0),
-                      child: const Text(
+                      padding: EdgeInsets.fromLTRB(32, 10, 0, 0),
+                      child: Text(
                         'Check Available Agents',
                         textAlign: TextAlign.center,
                         style: TextStyle(

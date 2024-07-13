@@ -1,12 +1,13 @@
+import 'dart:ffi';
 
 
 import 'package:dartz/dartz.dart';
-import 'package:super_app/modules/services/domain/entities/agentCalenderEntity.dart';
 import '../../../data/api/baseError.dart';
 import '../../entities/AgentServiceResponseEntity.dart';
 import '../../entities/ServiceCategoryResponseEntity.dart';
 import '../../entities/ServiceEntity.dart';
 import '../../entities/ServiceProviderEntity.dart';
+import '../../entities/agentCalenderEntity.dart';
 
 abstract class ServiceRepoContract{
   Future<Either<BaseError,ServiceCategoryEntity>>getAllServiceCategory();

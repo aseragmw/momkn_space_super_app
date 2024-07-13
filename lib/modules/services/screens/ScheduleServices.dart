@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:super_app/modules/services/screens/scheduleServiceDetails.dart';
+import 'package:flutter/widgets.dart';
+
+import 'scheduleServiceDetails.dart';
 
 class ScheduleServicesScreen extends StatelessWidget {
   const ScheduleServicesScreen({super.key});
@@ -11,12 +14,12 @@ class ScheduleServicesScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
-        title: const Text(
+        title: Text(
           'Scheduled Services',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
@@ -30,18 +33,18 @@ class ScheduleServicesScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
                     decoration: BoxDecoration(
                       color: Colors.white70,
                       borderRadius: BorderRadius.circular(30.0),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Icon(Icons.search, color: Colors.green),
                         SizedBox(height: 16.0),
                         Expanded(
                           child: TextField(
-                            decoration:  InputDecoration(
+                            decoration: InputDecoration(
                               hintText: '  Search..',
                               border: InputBorder.none,
                             ),
@@ -51,14 +54,14 @@ class ScheduleServicesScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 16.0),
+                SizedBox(width: 16.0),
                 Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFF12A770),
+                    color: Color(0xFF12A770),
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                   child: IconButton(
-                    icon: const Icon(Icons.filter_list_outlined, color: Colors.white ,),
+                    icon: Icon(Icons.filter_list_outlined, color: Colors.white ,),
                     onPressed: () {
                       // Filter action
                     },
@@ -67,10 +70,10 @@ class ScheduleServicesScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16.0),
+            SizedBox(height: 16.0),
             Expanded(
               child: ListView(
-                children: List.generate(3, (index) => const ServiceItem()),
+                children: List.generate(3, (index) => ServiceItem()),
               ),
             ),
           ],
@@ -88,7 +91,7 @@ class ServiceItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15.0),
@@ -97,7 +100,7 @@ class ServiceItem extends StatelessWidget {
               color: Colors.grey.withOpacity(0.2),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: const Offset(0, 3),
+              offset: Offset(0, 3),
             ),
           ],
         ),
@@ -107,22 +110,22 @@ class ServiceItem extends StatelessWidget {
               width: 90,
               height: 90,
               decoration: BoxDecoration(
-                color: const Color(0XFFFABE3C),
+                color: Color(0XFFFABE3C),
                 borderRadius: BorderRadius.circular(15.0),
               ),
-              child: const Icon(Icons.ac_unit_rounded, color: Colors.white,size: 50,), // Placeholder for the icon
+              child: Icon(Icons.ac_unit_rounded, color: Colors.white,size: 50,), // Placeholder for the icon
             ),
-            const SizedBox(width: 16.0),
+            SizedBox(width: 16.0),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment:MainAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'National ID booking',
                     style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
                   ),
-                  const SizedBox(height: 8.0,),
+                  SizedBox(height: 8.0,),
 
                   GestureDetector(
                     onTap: (){
@@ -133,13 +136,13 @@ class ServiceItem extends StatelessWidget {
                           onTap: (){
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const ServiceDetailsScreen()),
+                              MaterialPageRoute(builder: (context) => ServiceDetailsScreen()),
                             );
                           },
                           child: Container(
                             height: 30,
-                            padding: const EdgeInsets.fromLTRB(82,10, 0, 0),
-                            child:  const Text(
+                            padding: EdgeInsets.fromLTRB(82,10, 0, 0),
+                            child:  Text(
                               textAlign: TextAlign.center,
                               'Check Details',
                               style: TextStyle(color: Color(0xFF12A770),fontWeight: FontWeight.w500),

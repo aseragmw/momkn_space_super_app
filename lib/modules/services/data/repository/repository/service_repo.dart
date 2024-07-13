@@ -1,13 +1,14 @@
+import 'dart:ffi';
 
 
 import 'package:dartz/dartz.dart';
-import 'package:super_app/modules/services/domain/entities/ServiceCategoryResponseEntity.dart';
-import 'package:super_app/modules/services/domain/entities/ServiceEntity.dart';
-import 'package:super_app/modules/services/domain/entities/ServiceProviderEntity.dart';
-import 'package:super_app/modules/services/domain/entities/agentCalenderEntity.dart';
 
 import '../../../data/api/baseError.dart';
 import '../../../domain/entities/AgentServiceResponseEntity.dart';
+import '../../../domain/entities/ServiceCategoryResponseEntity.dart';
+import '../../../domain/entities/ServiceEntity.dart';
+import '../../../domain/entities/ServiceProviderEntity.dart';
+import '../../../domain/entities/agentCalenderEntity.dart';
 import '../../../domain/repository/dataSource/service_dataSource.dart';
 import '../../../domain/repository/repository/service_repo.dart';
 

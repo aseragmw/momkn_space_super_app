@@ -17,6 +17,7 @@ import 'package:super_app/modules/services/screens/AgentService/agentServiceDeta
 import 'package:super_app/modules/services/screens/AgentService/generalServices.dart';
 import 'package:super_app/modules/services/screens/AgentService/setaSchedule.dart';
 import 'package:super_app/modules/services/screens/Home/ServiceProviders.dart';
+import 'package:super_app/modules/services/screens/Home/ViewAllService.dart';
 import 'package:super_app/modules/services/screens/Home/cubit/home_view_model.dart';
 import 'package:super_app/modules/services/screens/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -75,6 +76,7 @@ class MyApp extends StatelessWidget {
           serviceProviderRoute: (context) => const ServiceProvidersScreen(),
           serviceRoute: (context) => const ServiceScreen(),
           agentCalenderRoute: (context) => const ServiceCalendarScreen(),
+          ViewAllServiceScreenRouter:(context)=>const ViewAllServiceScreen()
         },
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,

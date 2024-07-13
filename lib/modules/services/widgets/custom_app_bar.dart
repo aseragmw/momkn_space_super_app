@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -11,7 +12,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       flexibleSpace: Stack(
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.only(
+            borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(15),
               bottomRight: Radius.circular(15),
               topLeft: Radius.circular(30),
@@ -51,10 +52,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               height: 146,
             ),
           ),
-          const Positioned(
+          Positioned(
             right: 26,
             top: (212 - kToolbarHeight) / 2,  // Center vertically
-            child:  Icon(Icons.notifications_none_sharp, color: Colors.white),
+            child: Icon(Icons.notifications_none_sharp, color: Colors.white),
           ),
         ],
       ),

@@ -1,14 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:super_app/modules/services/domain/entities/ServiceEntity.dart';
-import 'package:super_app/modules/services/domain/entities/ServiceProviderEntity.dart';
-import 'package:super_app/modules/services/screens/AgentService/cubit/service_states.dart';
+import 'package:super_app/modules/services/booking_entity.dart';
 
+import '../../domain/entities/ServiceEntity.dart';
+import '../../domain/entities/ServiceProviderEntity.dart';
 import '../../domain/useCase/AgentCalender_useCase.dart';
 import '../../domain/useCase/agentServiceById_useCase.dart';
 import '../../domain/useCase/getAgentServices_useCase.dart';
+import '../../domain/useCase/getServicesCategories_useCase.dart';
+import '../../domain/useCase/serviceProvider_useCase.dart';
 import '../../domain/useCase/service_useCase.dart';
 import '../routes.dart';
+import 'cubit/service_states.dart';
 import 'cubit/service_view_model.dart';
 
 class ServiceScreen extends StatefulWidget {
@@ -34,6 +38,10 @@ class _ServiceScreen extends State<ServiceScreen> {
   Widget build(BuildContext context) {
     var args = ModalRoute.of(context)!.settings.arguments as Provider;
 
+    BookingEntity.categoryId = args.categoryId!;
+    BookingEntity.providerId = args.id!;
+
+
 
     return BlocProvider(
         create: (context) => serviceViewModel..getAllServices(args.id!),
@@ -42,7 +50,7 @@ class _ServiceScreen extends State<ServiceScreen> {
               if (state is ServiceLoadingState) {
                 return Container(
                   color: Colors.white, // Background color
-                  child: const Center(
+                  child: Center(
                     child: CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                       // Indicator color
@@ -58,12 +66,12 @@ class _ServiceScreen extends State<ServiceScreen> {
                     backgroundColor: Colors.transparent,
                     elevation: 0,
                     leading: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.black),
+                      icon: Icon(Icons.arrow_back, color: Colors.black),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
-                    title: const Text(
+                    title: Text(
                       'Services',
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold),
@@ -78,12 +86,12 @@ class _ServiceScreen extends State<ServiceScreen> {
                           children: [
                             Expanded(
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                padding: EdgeInsets.symmetric(horizontal: 16.0),
                                 decoration: BoxDecoration(
                                   color: Colors.white70,
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),
-                                child: const Row(
+                                child: Row(
                                   children: [
                                     Icon(Icons.search, color: Colors.green),
                                     SizedBox(height: 16.0),
@@ -99,14 +107,14 @@ class _ServiceScreen extends State<ServiceScreen> {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 16.0),
+                            SizedBox(width: 16.0),
                             Container(
                               decoration: BoxDecoration(
-                                color: const Color(0xFF12A770),
+                                color: Color(0xFF12A770),
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
                               child: IconButton(
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.filter_list_outlined, color: Colors.white,),
                                 onPressed: () {
                                   // Filter action
@@ -116,7 +124,7 @@ class _ServiceScreen extends State<ServiceScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16.0),
+                        SizedBox(height: 16.0),
                         Expanded(
                           child: ListView.builder(
                             itemCount: serviceViewModel.servicePassed?.length,
@@ -133,7 +141,7 @@ class _ServiceScreen extends State<ServiceScreen> {
               else{
                 return Container(
                   color: Colors.white, // Background color
-                  child: const Center(
+                  child: Center(
                     child: CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                       // Indicator color
@@ -160,7 +168,7 @@ class ServicesItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15.0),
@@ -169,7 +177,7 @@ class ServicesItem extends StatelessWidget {
               color: Colors.grey.withOpacity(0.2),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: const Offset(0, 3),
+              offset: Offset(0, 3),
             ),
           ],
         ),
@@ -179,12 +187,12 @@ class ServicesItem extends StatelessWidget {
               width: 90,
               height: 90,
               decoration: BoxDecoration(
-                color: const Color(0xFF3DAB25),
+                color: Color(0xFF3DAB25),
                 borderRadius: BorderRadius.circular(15.0),
               ),
-              child: const Icon(Icons.ac_unit_rounded, color: Colors.white,size: 50,), // Placeholder for the icon
+              child: Icon(Icons.ac_unit_rounded, color: Colors.white,size: 50,), // Placeholder for the icon
             ),
-            const SizedBox(width: 16.0),
+            SizedBox(width: 16.0),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,16 +200,16 @@ class ServicesItem extends StatelessWidget {
                 children: [
                   Text(
                     services.name!,
-                    style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
+                    style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
                   ),
-                  const SizedBox(height: 8.0,),
+                  SizedBox(height: 8.0,),
                   Text(
                     '${services.fees} EG',
-                    style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 14,color: Color(0xFF12A770)),
+                    style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14,color: Color(0xFF12A770)),
                   ),
                   Container(
                       height: 30,
-                      padding: const EdgeInsets.fromLTRB(60, 0, 0, 0),
+                      padding: EdgeInsets.fromLTRB(60, 0, 0, 0),
                       child:
                       ElevatedButton(
                         onPressed: () {
@@ -209,7 +217,7 @@ class ServicesItem extends StatelessWidget {
                           // Add your logic here
                         },
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF12A770)),
+                          backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF12A770)),
                         ),
                         child: Container(
                           alignment: Alignment.center,
@@ -217,7 +225,7 @@ class ServicesItem extends StatelessWidget {
                           height: 30,
                           // padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                           child: Container(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                            padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -229,13 +237,13 @@ class ServicesItem extends StatelessWidget {
                                       onTap: (){
                                         Navigator.of(context).pushNamed(serviceAgentDetailsRoute, arguments:services);
                                       },
-                                      child: const Text(
+                                      child: Text(
                                         textAlign: TextAlign.center,
                                         'Details',
                                         style: TextStyle(color: Colors.white),
                                       ),
                                     ),
-                                    const Icon(Icons.arrow_forward_rounded,color: Colors.white,size: 15,)
+                                    Icon(Icons.arrow_forward_rounded,color: Colors.white,size: 15,)
                                   ],
                                 )
                                 :
@@ -245,13 +253,13 @@ class ServicesItem extends StatelessWidget {
                                       onTap: (){
                                         // Navigator.of(context).pushNamed(serviceRoute, arguments:provider);
                                       },
-                                      child: const Text(
+                                      child: Text(
                                         textAlign: TextAlign.center,
                                         'Book',
                                         style: TextStyle(color: Colors.white),
                                       ),
                                     ),
-                                    const Icon(Icons.arrow_forward_rounded,color: Colors.white,size: 15,)
+                                    Icon(Icons.arrow_forward_rounded,color: Colors.white,size: 15,)
                                   ],
                                 )
                               ],

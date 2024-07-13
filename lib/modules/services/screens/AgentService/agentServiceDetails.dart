@@ -1,14 +1,17 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:super_app/modules/services/domain/entities/AgentServiceResponseEntity.dart';
-import 'package:super_app/modules/services/domain/useCase/AgentCalender_useCase.dart';
 
+import '../../domain/entities/AgentServiceResponseEntity.dart';
 import '../../domain/entities/ServiceEntity.dart';
+import '../../domain/useCase/AgentCalender_useCase.dart';
 import '../../domain/useCase/agentServiceById_useCase.dart';
 import '../../domain/useCase/getAgentServices_useCase.dart';
 import '../../domain/useCase/service_useCase.dart';
 import '../routes.dart';
+import '../scheduleServiceDetails.dart';
+import '../ScheduleServices.dart';
 import 'cubit/service_states.dart';
 import 'cubit/service_view_model.dart';
 class AgentServiceDetailsScreen extends StatefulWidget {
@@ -38,6 +41,8 @@ class _AgentServiceDetailsScreen extends State<AgentServiceDetailsScreen> {
         .arguments as Services;
 
 
+
+
     return BlocProvider(
         create: (context) => serviceViewModel..getAllAgentService(args.id!),
         child: BlocBuilder<ServiceScreenViewModel, ServiceStates>(
@@ -45,8 +50,8 @@ class _AgentServiceDetailsScreen extends State<AgentServiceDetailsScreen> {
               if (state is ServiceLoadingState) {
                 return Container(
                   color: Colors.white, // Background color
-                  child: const Center(
-                    child:  CircularProgressIndicator(
+                  child: Center(
+                    child: CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                       // Indicator color
                       backgroundColor: Colors
@@ -58,20 +63,20 @@ class _AgentServiceDetailsScreen extends State<AgentServiceDetailsScreen> {
               else if (state is ServiceSuccessState) {
                 return Scaffold(
                   appBar: PreferredSize(
-                    preferredSize: const Size.fromHeight(211.0),
+                    preferredSize: Size.fromHeight(211.0),
                     // Set your custom height here
                     child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
+                      borderRadius: BorderRadius.vertical(
                         bottom: Radius.circular(
                             20.0), // Set your custom border radius here
                       ),
                       child: AppBar(
-                        backgroundColor: const Color(0xFFFABE3C),
-                        title: const Text('Service Details'
+                        backgroundColor: Color(0xFFFABE3C),
+                        title: Text('Service Details'
                           ,
                           style: TextStyle(fontSize: 24, color: Colors.white),),
                         leading: IconButton(
-                          icon: const Icon(Icons.arrow_back, color: Colors.white,),
+                          icon: Icon(Icons.arrow_back, color: Colors.white,),
                           onPressed: () {
                             Navigator.pop(context);
                           },
@@ -80,7 +85,7 @@ class _AgentServiceDetailsScreen extends State<AgentServiceDetailsScreen> {
                           GestureDetector(
                             onTap: () {},
                             child: Container(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                              padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
                               child: Image.asset(
                                 'assets/images/save.png',
                                 // fit: BoxFit.cover,
@@ -100,20 +105,20 @@ class _AgentServiceDetailsScreen extends State<AgentServiceDetailsScreen> {
                       children: [
                         Text(
                           args.name!,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        const Text(
+                        SizedBox(height: 16),
+                        Text(
                           'CHECK AVAILABLE DOCTORS',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.green,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16),
                         Expanded(
                           child: ListView.builder(
                             itemCount: serviceViewModel.agentServiceList?.length ?? 0,
@@ -131,7 +136,7 @@ class _AgentServiceDetailsScreen extends State<AgentServiceDetailsScreen> {
               else {
                 return Container(
                   color: Colors.white, // Background color
-                  child: const Center(
+                  child: Center(
                     child: CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                       // Indicator color
@@ -154,9 +159,9 @@ class buildDoctorCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color(0xFFFFFFFF),
-      shadowColor: const Color(0xFF979797),
-      margin: const EdgeInsets.symmetric(vertical: 12),
+      color: Color(0xFFFFFFFF),
+      shadowColor: Color(0xFF979797),
+      margin: EdgeInsets.symmetric(vertical: 12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
@@ -175,46 +180,46 @@ class buildDoctorCard extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     service.agentEnglishName!,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'DMSans'
                     ),
                   ),
-                  const SizedBox(height: 25),
+                  SizedBox(height: 25),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                        '${service.serviceAgentfees} EG',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF3DAB25),
                         ),
                       ),
-                      const SizedBox(width: 18),
+                      SizedBox(width: 18),
                       ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pushNamed(agentCalenderRoute, arguments:service);
                           },
+                          child: Text(
+                            'Set a schedule',
+                            style: TextStyle(color: Colors.white,fontSize: 12,fontWeight: FontWeight.bold),
+                          ),
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-                            backgroundColor: const Color(0xFF12A770),
+                            padding: EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+                            backgroundColor: Color(0xFF12A770),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(7),
                             ),
-                          ),
-                          child: const Text(
-                            'Set a schedule',
-                            style: TextStyle(color: Colors.white,fontSize: 12,fontWeight: FontWeight.bold),
                           ),
                         ),
                     ],

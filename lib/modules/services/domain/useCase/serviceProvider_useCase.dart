@@ -4,6 +4,7 @@ import '../../data/api/api_manager.dart';
 import '../../data/api/baseError.dart';
 import '../../data/repository/dataSource/service_dataSource.dart';
 import '../../data/repository/repository/service_repo.dart';
+import '../entities/AgentServiceResponseEntity.dart';
 import '../entities/ServiceProviderEntity.dart';
 import '../repository/dataSource/service_dataSource.dart';
 import '../repository/repository/service_repo.dart';

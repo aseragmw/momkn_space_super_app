@@ -1,24 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:super_app/modules/services/booking_entity.dart';
 
 import '../../domain/entities/ServiceCategoryResponseEntity.dart';
-import '../../domain/entities/ServiceProviderEntity.dart';
 import '../../domain/useCase/getServicesCategories_useCase.dart';
 import '../../domain/useCase/serviceProvider_useCase.dart';
 import '../routes.dart';
 import 'cubit/home_states.dart';
 import 'cubit/home_view_model.dart';
 
-class ServiceProvidersScreen extends StatefulWidget {
-  const ServiceProvidersScreen({super.key});
+class ViewAllServiceScreen extends StatefulWidget {
+  const ViewAllServiceScreen({super.key});
 
   @override
-  State<ServiceProvidersScreen> createState() => _ServiceProvidersScreen();
+  State<ViewAllServiceScreen> createState() => _ViewAllServiceScreen();
 }
 
-class _ServiceProvidersScreen extends State<ServiceProvidersScreen> {
+class _ViewAllServiceScreen extends State<ViewAllServiceScreen> {
 
 
   HomeScreenViewModel homeViewModel = HomeScreenViewModel(
@@ -30,11 +28,10 @@ class _ServiceProvidersScreen extends State<ServiceProvidersScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    var args = ModalRoute.of(context)!.settings.arguments as Category;
 
 
     return BlocProvider(
-        create: (context) => homeViewModel..getAllServiceProvider(args.id!),
+        create: (context) => homeViewModel..getAllServiceCategory(),
         child: BlocBuilder<HomeScreenViewModel, HomeStates>(
         builder: (context, state) {
       if (state is HomeLoadingState) {
@@ -50,7 +47,7 @@ class _ServiceProvidersScreen extends State<ServiceProvidersScreen> {
           ),
         );
       }
-      else if (state is ProviderSuccessState) {
+      else if (state is CategorySuccessState) {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.transparent,
@@ -62,7 +59,7 @@ class _ServiceProvidersScreen extends State<ServiceProvidersScreen> {
               },
             ),
             title: Text(
-              'Service Providers',
+              'Service Categories',
               style: TextStyle(
                   color: Colors.black, fontWeight: FontWeight.bold),
             ),
@@ -117,9 +114,9 @@ class _ServiceProvidersScreen extends State<ServiceProvidersScreen> {
                 SizedBox(height: 16.0),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: homeViewModel.serviceProviderList?.length,
+                    itemCount: homeViewModel.categoryServiceList?.length,
                     itemBuilder: (context, index) {
-                      return ProviderItem(provider: homeViewModel.serviceProviderList![index]);
+                      return CategoryItem(category: homeViewModel.categoryServiceList![index]);
                     },
                   ),
                 ),
@@ -148,10 +145,10 @@ class _ServiceProvidersScreen extends State<ServiceProvidersScreen> {
   }
 }
 
-class ProviderItem extends StatelessWidget {
-  final Provider provider;
+class CategoryItem extends StatelessWidget {
+  final Category category;
 
-  const ProviderItem({super.key,required this.provider});
+  const CategoryItem({Key? key, required this.category}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -180,63 +177,45 @@ class ProviderItem extends StatelessWidget {
                 color: Color(0xFF3DAB25),
                 borderRadius: BorderRadius.circular(15.0),
               ),
-              child: Icon(Icons.ac_unit_rounded, color: Colors.white,size: 50,), // Placeholder for the icon
+              child: category.image != null && category.image!.secureUrl != null
+                  ? Image.network(
+                category.image!.secureUrl!,
+                fit: BoxFit.cover,
+              )
+                  : Icon(
+                Icons.ac_unit_rounded,
+                color: Colors.white,
+                size: 50,
+              ),
             ),
             SizedBox(width: 16.0),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment:MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    provider.spEnglishName!,
-                    style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
+                    category.categoryEnglishName!,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
-                  SizedBox(height: 8.0,),
-
-                  Container(
-                    height: 30,
-                    padding: EdgeInsets.fromLTRB(60, 0, 0, 0),
-                    child:
-                    ElevatedButton(
-                      onPressed: () {
-                        // Handle button press
-                        // Add your logic here
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF12A770)),
+                  SizedBox(height: 8.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(serviceProviderRoute, arguments: category);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF12A770)),
+                    ),
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 70,
+                      height: 30,
+                      child: Text(
+                        'Details',
+                        style: TextStyle(color: Colors.white),
                       ),
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: 70,
-                        height: 30,
-                        // padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                        child: Container(
-                          padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: (){
-                                  Navigator.of(context).pushNamed(serviceRoute, arguments:provider);
-                                },
-                                child: Text(
-                                  textAlign: TextAlign.center,
-                                  'Details',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-
-                              Icon(Icons.arrow_forward_rounded,color: Colors.white,size: 15,)
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-
+                    ),
                   ),
-
                 ],
               ),
             ),

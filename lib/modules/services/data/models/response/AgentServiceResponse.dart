@@ -1,5 +1,5 @@
 
-import 'package:super_app/modules/services/domain/entities/AgentServiceResponseEntity.dart';
+import '../../../domain/entities/AgentServiceResponseEntity.dart';
 
 /// message : "Done"
 /// data : [{"_id":"667bfa784706d8f6e2789c30","agentEnglishName":"usef","agentArabicName":"يوسف","serviceId":"667bfa3d4706d8f6e2789c2e","serviceAgentfees":50,"state":"active","isVisible":true,"hasCalendar":true,"__v":0},{"_id":"667df44f964923a8a39d734b","agentEnglishName":"ahmed","agentArabicName":"يوسف","serviceId":"667bfa3d4706d8f6e2789c2e","serviceAgentfees":50,"state":"active","isVisible":true,"hasCalendar":true,"__v":0}]

@@ -1,10 +1,10 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:super_app/modules/services/domain/entities/ServiceEntity.dart';
-import 'package:super_app/modules/services/domain/entities/agentCalenderEntity.dart';
 import 'package:super_app/modules/services/screens/AgentService/cubit/service_states.dart';
 
 import '../../../domain/entities/AgentServiceResponseEntity.dart';
+import '../../../domain/entities/ServiceEntity.dart';
+import '../../../domain/entities/agentCalenderEntity.dart';
 import '../../../domain/useCase/AgentCalender_useCase.dart';
 import '../../../domain/useCase/agentServiceById_useCase.dart';
 import '../../../domain/useCase/getAgentServices_useCase.dart';

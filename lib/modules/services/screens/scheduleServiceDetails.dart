@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:super_app/modules/services/screens/AgentService/setaSchedule.dart';
-import 'package:super_app/modules/services/widgets/icon_card.dart';
+
+import '../widgets/icon_card.dart';
+import 'AgentService/setaSchedule.dart';
 
 
 class ServiceDetailsScreen extends StatefulWidget {
-  const ServiceDetailsScreen({super.key});
-
   @override
   _ServiceDetailsScreen createState() => _ServiceDetailsScreen();
 }
@@ -18,17 +17,17 @@ class _ServiceDetailsScreen extends State<ServiceDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:PreferredSize(
-        preferredSize: const Size.fromHeight(211.0), // Set your custom height here
+        preferredSize: Size.fromHeight(211.0), // Set your custom height here
         child: ClipRRect(
-          borderRadius: const BorderRadius.vertical(
+          borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(20.0), // Set your custom border radius here
           ),
           child: AppBar(
-            backgroundColor: const Color(0xFFFABE3C),
-            title: const Text('Service Details'
+            backgroundColor: Color(0xFFFABE3C),
+            title: Text('Service Details'
               ,style: TextStyle(fontSize: 24,color: Colors.white),),
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back,color: Colors.white,),
+              icon: Icon(Icons.arrow_back,color: Colors.white,),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -37,7 +36,7 @@ class _ServiceDetailsScreen extends State<ServiceDetailsScreen> {
               GestureDetector(
                 onTap: (){},
                 child: Container(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                  padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
                   child: Image.asset(
                     'assets/images/save.png',
                     // fit: BoxFit.cover,
@@ -62,11 +61,11 @@ class _ServiceDetailsScreen extends State<ServiceDetailsScreen> {
                   Container(
                     width: 295,
                     height: 60,
-                    padding: const EdgeInsets.fromLTRB(15, 5, 5, 5),
+                    padding: EdgeInsets.fromLTRB(15, 5, 5, 5),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(30),
-                      boxShadow: const [
+                      boxShadow: [
                         BoxShadow(
                         color: Color(0xFF979797)
                       ),]
@@ -74,26 +73,26 @@ class _ServiceDetailsScreen extends State<ServiceDetailsScreen> {
                     child: Row(
                       children: [
                         Container(
-                          padding:const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                          padding:EdgeInsets.fromLTRB(0, 0, 15, 0),
                           child:
-                          const Text('Check available dates'),
+                          Text('Check available dates'),
 
                         ),
                         ElevatedButton(
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const ServiceCalendarScreen()),
+                              MaterialPageRoute(builder: (context) => ServiceCalendarScreen()),
                             );                          },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF12A770),
+                            backgroundColor: Color(0xFF12A770),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(7.0),
                             ),
                             elevation: 5,
-                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 0),
+                            padding: EdgeInsets.symmetric(horizontal: 7, vertical: 0),
                           ),
-                          child: const Text('Set a schedule',
+                          child: Text('Set a schedule',
                             style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 12),),
                         ),
                       ],
@@ -104,12 +103,12 @@ class _ServiceDetailsScreen extends State<ServiceDetailsScreen> {
 
                 ],
               ),
-              const Text(
+              Text(
                 'New electricity cable booking',
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 16),
-              const Row(
+              SizedBox(height: 16),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -125,7 +124,7 @@ class _ServiceDetailsScreen extends State<ServiceDetailsScreen> {
                 ],
               ),
               // SizedBox(height: 5),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -140,11 +139,11 @@ class _ServiceDetailsScreen extends State<ServiceDetailsScreen> {
                   ),
                 ],
               ),
-              const Text(
+              Text(
                 'About Service',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               // Text(
               //   'Enjoy your favorite dishe and a lovely your friends and family and have a great time. '
               //       'Food from local food trucks will be available for purchase. Read More...',
@@ -154,7 +153,7 @@ class _ServiceDetailsScreen extends State<ServiceDetailsScreen> {
                   ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Enjoy your favorite dishe and a lovely your friends and family and have a great time. '
                         'Food from local food trucks will be available for purchase. Read More...',
                     style: TextStyle(color: Colors.grey),
@@ -165,7 +164,7 @@ class _ServiceDetailsScreen extends State<ServiceDetailsScreen> {
                         _isExpanded = false;
                       });
                     },
-                    child: const Text(
+                    child: Text(
                       'Show Less',
                       style: TextStyle(color: Colors.blue),
                     ),
@@ -175,7 +174,7 @@ class _ServiceDetailsScreen extends State<ServiceDetailsScreen> {
                   : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Enjoy your favorite dishe and a lovely your friends and family and have a great time. '
                         'Food from local food trucks will be available for purchase. Read More...',
                     maxLines: 2,
@@ -188,27 +187,27 @@ class _ServiceDetailsScreen extends State<ServiceDetailsScreen> {
                         _isExpanded = true;
                       });
                     },
-                    child: const Text(
+                    child: Text(
                       'Show More',
                       style: TextStyle(color: Colors.blue),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 17),
+              SizedBox(height: 17),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
                     // Book service action
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF12A770),
+                    backgroundColor: Color(0xFF12A770),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 57, vertical: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 57, vertical: 16),
                   ),
-                  child: const Text('BOOK SERVICE', style: TextStyle(fontSize: 16,color: Colors.white)),
+                  child: Text('BOOK SERVICE', style: TextStyle(fontSize: 16,color: Colors.white)),
                 ),
               ),
             ],

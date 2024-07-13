@@ -1,8 +1,8 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:super_app/modules/services/domain/entities/ServiceProviderEntity.dart';
 
 import '../../../domain/entities/ServiceCategoryResponseEntity.dart';
+import '../../../domain/entities/ServiceProviderEntity.dart';
 import '../../../domain/useCase/getServicesCategories_useCase.dart';
 import '../../../domain/useCase/serviceProvider_useCase.dart';
 import 'home_states.dart';

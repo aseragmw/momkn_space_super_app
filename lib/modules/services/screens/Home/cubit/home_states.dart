@@ -1,9 +1,8 @@
 
 
 
-import 'package:super_app/modules/services/domain/entities/ServiceProviderEntity.dart';
-
 import '../../../domain/entities/ServiceCategoryResponseEntity.dart';
+import '../../../domain/entities/ServiceProviderEntity.dart';
 
 abstract class HomeStates{}
 

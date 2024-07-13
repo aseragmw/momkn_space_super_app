@@ -54,21 +54,7 @@ class ProfileScreen extends StatelessWidget {
           SizedBox(
             height: context.screenHeight * 0.02,
           ),
-          CustomButton(
-            title: 'Community Games',
-            onPress: ()  {
-              Navigator.of(context).push(MaterialPageRoute(builder: (_)=>SuperTypeHandlingScreen()));
-            },
-            buttonColor: AppTheme.primaryGreenColor,
-            borderRadius: AppTheme.boxRadius,
-            borderColor: AppTheme.primaryGreenColor,
-            buttonWidth: context.screenWidth * 0.7,
-            fontSize: AppTheme.fontSize16(context),
-            fontColor: AppTheme.whiteColor,
-          ),
-          SizedBox(
-            height: context.screenHeight * 0.02,
-          ),
+
           CustomButton(
             title: 'Invoices History',
             onPress: () async {

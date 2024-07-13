@@ -1,22 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:super_app/modules/services/data/models/request/agentCalenderRequest.dart';
-import 'package:super_app/modules/services/data/models/response/ServiceProviderResponse.dart';
-import 'package:super_app/modules/services/data/models/response/agentCalenderResponse.dart';
-import 'package:super_app/modules/services/data/models/response/AgentServiceResponse.dart';
-
-
-
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as https;
 
 import 'package:dartz/dartz.dart';
 
 import '../models/request/GetById_Request.dart';
 import '../models/request/ServiceRequest.dart';
+import '../models/request/agentCalenderRequest.dart';
 import '../models/request/providerRequest.dart';
 import '../models/request/serviceAgentRequest.dart';
+import '../models/response/AgentServiceResponse.dart';
 import '../models/response/ServiceCategoryResponse.dart';
+import '../models/response/ServiceProviderResponse.dart';
 import '../models/response/ServiceResponse.dart';
+import '../models/response/agentCalenderResponse.dart';
 import 'api_constants.dart';
 import 'baseError.dart';
 
@@ -110,8 +108,8 @@ class ApiManager {
 
 
   Future<Either<BaseError, ServiceCategoryResponse>> getAllServiceCategory() async {
-    final result = await InternetAddress.lookup('youtube.com');
-    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult != ConnectivityResult.none) {
       print('connected');
       Uri url = Uri.https(ApiConstants.baseUrl, ApiConstants.getAllServiceCategory);
       Map<String, String> headers = {
