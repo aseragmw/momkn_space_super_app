@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_size.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/extentions/string_extensions.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/notificartions/presentation/screens/notifications_screen.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/domain/entities/catalog_entity.dart';
 import 'package:super_app/modules/gaming/super_screens/super_type_handling_screen.dart';
 
@@ -20,9 +21,11 @@ import '../../../../../Ordering_Notifications/features/products/presentation/scr
 import '../../../../../Ordering_Notifications/features/profile/presentation/screens/profile_screen.dart';
 import '../../../../../services/domain/useCase/getServicesCategories_useCase.dart';
 import '../../../../../services/domain/useCase/serviceProvider_useCase.dart';
+import '../../../../../services/screens/Home/ViewAllService.dart';
 import '../../../../../services/screens/Home/cubit/home_states.dart';
 import '../../../../../services/screens/Home/cubit/home_view_model.dart';
 import '../../../../../services/screens/routes.dart';
+import '../../../../../services/widgets/icon_card.dart';
 import '../../../../constants.dart';
 
 class ConsumerHomeView extends StatefulWidget {
@@ -116,6 +119,7 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                                       padding: EdgeInsets.only(right: context.screenAspectRatio * 15),
                                       child: InkWell(
                                         onTap: (){
+                                          Navigator.of(context).push(MaterialPageRoute(builder: (_)=>NotificationScreen()));
                                         },
                                         child: Icon(
                                           Icons.notifications_outlined,
@@ -217,7 +221,22 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+
+                            Divider(color: AppTheme.orangeColor,),
+                            SizedBox(
+                              height: context.screenAspectRatio * 10,
+                            ),
+
+                            InkWell(onTap: (){
+                              Navigator.of(context).push(MaterialPageRoute(builder: (_)=>SuperTypeHandlingScreen()));
+                            },child: Container(decoration: BoxDecoration(border: Border.all(color: AppTheme.primaryGreenColor,width: 2),borderRadius: AppTheme.boxRadius),padding: EdgeInsets.all(context.screenAspectRatio*5),child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,crossAxisAlignment: CrossAxisAlignment.center,children: [Text("Explore Our Community Games",style: TextStyle(fontWeight: AppTheme.fontWeight600,fontSize: AppTheme.fontSize18(context),color: AppTheme.blackColor),),Icon(Icons.arrow_forward_ios,size: context.screenAspectRatio*12,color: AppTheme.orangeColor,)],),))
+                       , SizedBox(
+                              height: context.screenAspectRatio * 10,
+                            ),
+                            Divider(color: AppTheme.orangeColor,),
+                            SizedBox(
+                              height: context.screenAspectRatio * 10,
+                            ),Text(
                               "Bills",
                               style: TextStyle(fontSize: AppTheme.fontSize18(context), fontWeight: AppTheme.fontWeight600),
                             ),
@@ -233,7 +252,11 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                               ],
                             ),
                             SizedBox(
-                              height: context.screenAspectRatio * 20,
+                              height: context.screenAspectRatio * 10,
+                            ),
+                            Divider(color: AppTheme.orangeColor,),
+                            SizedBox(
+                              height: context.screenAspectRatio * 10,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -243,7 +266,9 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                                   style: TextStyle(fontSize: AppTheme.fontSize18(context), fontWeight: AppTheme.fontWeight600),
                                 ),
                                 InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ViewAllServiceScreen() ));
+                                  },
                                   child: Text(
                                     "View all",
                                     style: TextStyle(
@@ -260,27 +285,40 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                             SizedBox(
                               width: context.screenWidth,
                               height: context.screenHeight * 0.15,
-                              child: ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                padding: EdgeInsets.zero,
-                                scrollDirection: Axis.horizontal,
-                                shrinkWrap: true,
-                                itemCount: state.ServiceCategory.data!.length,
-                                itemBuilder: (context, index) {
-                                  final category = state.ServiceCategory.data![index];
-                                  return GestureDetector(
-                                      onTap: () {
-                                        // Navigate to the appropriate screen based on the category
-                                        Navigator.of(context).pushNamed(serviceProviderRoute, arguments: category);
-                                      },
-                                      child: SizedBox(
-                                        child: ServicesBookingWidget(
-                                            serviceTitle: category.categoryEnglishName!,
-                                            icon: Icons.miscellaneous_services_rounded,
-                                            backgroundColor: AppTheme.orangeColor),
-                                      ));
-                                },
+                              child: Center(
+                                child: ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.zero,
+                                  scrollDirection: Axis.horizontal,
+                                  shrinkWrap: true,
+                                  itemCount: 3,
+                                  itemBuilder: (context, index) {
+                                    final category = state.ServiceCategory.data![index];
+                                    return GestureDetector(
+                                        onTap: () {
+                                          // Navigate to the appropriate screen based on the category
+                                          Navigator.of(context).pushNamed(serviceProviderRoute, arguments: category);
+                                        },
+                                        child: SizedBox(
+                                          child: Container(
+                                            margin: EdgeInsets.symmetric(horizontal: context.screenAspectRatio*12),
+                                            child: IconCard2(
+                                              imageUrl: category.image?.secureUrl,
+                                              label: category.categoryEnglishName!,
+                                              color: Colors.green,
+                                            ),
+                                          ),
+                                        ));
+                                  },
+                                ),
                               ),
+                            ),
+                            // SizedBox(
+                            //   height: context.screenAspectRatio * 10,
+                            // ),
+                            Divider(color: AppTheme.orangeColor,),
+                            SizedBox(
+                              height: context.screenAspectRatio * 10,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

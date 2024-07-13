@@ -28,17 +28,16 @@ class NotificationWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              width: context.screenWidth * 0.6,
-              child: Text(
-                notificationEntity.title,
-                style: TextStyle(
-                    fontSize: AppTheme.fontSize18(context), color: AppTheme.primaryGreenColor, fontWeight: AppTheme.fontWeight500),
-              ),
+            Text(
+              notificationEntity.title,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: AppTheme.fontSize18(context), color: AppTheme.primaryGreenColor, fontWeight: AppTheme.fontWeight500),
             ),
             Text(
-              notificationEntity.effectiveDate,
+              notificationEntity.effectiveDate.substring(0,10),
               overflow: TextOverflow.ellipsis,
+
               style: TextStyle(fontSize: AppTheme.fontSize14(context), color: AppTheme.greyHintColor, fontWeight: AppTheme.fontWeight600),
             ),
           ],

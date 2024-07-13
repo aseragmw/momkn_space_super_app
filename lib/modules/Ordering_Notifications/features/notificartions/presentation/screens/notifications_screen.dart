@@ -24,7 +24,7 @@ class NotificationScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomAppBar(
-          showBackCursor: false,
+          showBackCursor: true,
           title: Text(
             "Notifications",
             style: TextStyle(fontSize: AppTheme.fontSize24(context), fontWeight: AppTheme.fontWeight500, color: AppTheme.blackColor),
@@ -33,20 +33,36 @@ class NotificationScreen extends StatelessWidget {
         SizedBox(
           height: context.screenHeight * 0.025,
         ),
-        BlocConsumer(
+        BlocConsumer<NotificationBloc,NotificationState>(
           builder: (context, state) {
             if (state is GetNotificationstLoadingState) {
               return const CustomCircularProgressIndicator(
                 color: AppTheme.primaryGreenColor,
               );
             } else if (state is GetNotificationsSuccessState) {
-              return ListView.builder(
-                itemBuilder: (context, index) {
-                  return NotificationWidget(notificationEntity: state.notifications[index]);
-                },
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-              );
+              if(state.notifications.isNotEmpty){
+                return ListView.builder(
+                  itemCount: state.notifications.length,
+                  itemBuilder: (context, index) {
+                    return NotificationWidget(notificationEntity: state.notifications[index]);
+                  },
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                );
+              }
+              else{
+                return Center(
+                  child: SizedBox(
+                      width: context.screenWidth * 0.8,
+                      child: Text(
+                        "No Notifications Yet",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: AppTheme.fontSize20(context), color: AppTheme.primaryGreenColor, fontWeight: AppTheme.fontWeight600),
+                      )),
+                );
+              }
+
             } else {
               return Center(
                 child: SizedBox(

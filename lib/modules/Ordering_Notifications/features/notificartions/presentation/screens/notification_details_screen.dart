@@ -15,30 +15,42 @@ class NotificationDetailsScreen extends StatelessWidget {
     return MainLayout(
         body: Column(
       mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const CustomAppBar(
           showBackCursor: true,
         ),
         SizedBox(
-          height: context.screenHeight * 0.025,
+          height: context.screenHeight * 0.015,
+        ),
+        Container(
+          child: Text(
+            notificationEntity.senderName,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: AppTheme.fontSize26(context), color: AppTheme.primaryGreenColor, fontWeight: AppTheme.fontWeight500),
+          ),
+        ),
+        SizedBox(
+          height: context.screenHeight * 0.010,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              width: context.screenWidth * 0.6,
+            Container(
               child: Text(
                 notificationEntity.title,
                 style: TextStyle(
                     fontSize: AppTheme.fontSize22(context), color: AppTheme.primaryGreenColor, fontWeight: AppTheme.fontWeight500),
               ),
             ),
-            Text(
-              notificationEntity.effectiveDate,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: AppTheme.fontSize16(context), color: AppTheme.greyHintColor, fontWeight: AppTheme.fontWeight600),
+            Container(
+              child: Text(
+                notificationEntity.effectiveDate.substring(0,10),
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: AppTheme.fontSize16(context), color: AppTheme.greyHintColor, fontWeight: AppTheme.fontWeight600),
+              ),
             ),
           ],
         ),

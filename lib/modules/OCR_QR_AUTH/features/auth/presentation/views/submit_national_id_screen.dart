@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:super_app/modules/OCR_QR_AUTH/features/auth/presentation/views/widgets/input_text_field.dart';
 
 import '../../../../constants.dart';
 import '../../../../core/models/national_id_model.dart';
+import '../../../../core/utils/functions/show_snack_bar.dart';
 import '../manager/auth_cubit.dart';
+import '../manager/auth_state.dart';
+import 'login_screen.dart';
+
 
 class SubmitNationalIdScreen extends StatelessWidget {
   const SubmitNationalIdScreen({super.key});
@@ -141,7 +146,7 @@ class SubmitNationalIdScreen extends StatelessWidget {
                 minWidth: 200,
                 onPressed: () async {
                   NationalIdModel natonalID = NationalIdModel(
-                    image: "argument.image",
+                    image: argument.image,
                     nationalId: nationalIdController.text,
                     gender: genderController.text,
                     address: addressController.text,
@@ -153,6 +158,7 @@ class SubmitNationalIdScreen extends StatelessWidget {
                   );
                   BlocProvider.of<AuthCubit>(context).user.nid = natonalID;
                   await BlocProvider.of<AuthCubit>(context).createNewUser();
+
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -164,8 +170,7 @@ class SubmitNationalIdScreen extends StatelessWidget {
                             TextButton(
                               child: const Text('OK'),
                               onPressed: () {
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pop();
+                              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_)=>LoginScreen()), (route) => false);
                               },
                             ),
                           ],

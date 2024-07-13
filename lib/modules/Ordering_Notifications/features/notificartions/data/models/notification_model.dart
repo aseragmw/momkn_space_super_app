@@ -3,12 +3,12 @@ import 'package:super_app/modules/Ordering_Notifications/core/constants/api_cona
 import 'package:super_app/modules/Ordering_Notifications/features/notificartions/domain/entities/notification_entity.dart';
 
 class NotificationModel extends NotificationEntity {
-  const NotificationModel({required super.id, required super.title, required super.body, required super.effectiveDate, required super.userMobileNumber, required super.senderName});
+  const NotificationModel( {required super.id, required super.title, required super.body, required super.amount, required super.effectiveDate, required super.userMobileNumber, required super.senderName});
 
  
 
   factory NotificationModel.fromJson(Map<String, dynamic> jsonData) {
-    return NotificationModel(id: jsonData[idAPIKey], title: jsonData[titleAPIKey], body: jsonData[bodyAPIKey], effectiveDate: jsonData[effectiveDataAPIKey], userMobileNumber: jsonData[userMobileNumberAPIKey], senderName: jsonData[senderNameAPIKey]);
+    return NotificationModel(amount:jsonData["amount"],id: jsonData["id"], title: jsonData["title"], body: jsonData["body"], effectiveDate: jsonData["effectiveDate"], userMobileNumber: jsonData["userMobileNumber"], senderName: jsonData["senderName"]);
   }
   Map<String, dynamic> toJson() {
     return {
@@ -18,6 +18,7 @@ class NotificationModel extends NotificationEntity {
       effectiveDataAPIKey:effectiveDate,
       userMobileNumberAPIKey:userMobileNumber,
       senderNameAPIKey:senderName,
+      "amount":amount
     };
   }
 }

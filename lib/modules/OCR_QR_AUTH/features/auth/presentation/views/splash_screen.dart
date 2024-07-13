@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _checkLoginStatus() async {
-    await Future.delayed(const Duration(seconds: 2)); // Simulate a delay for the splash screen
+    await Future.delayed(const Duration(seconds: 2));
 
     final user = AppConstants.cachedCurrentUserObject;
 

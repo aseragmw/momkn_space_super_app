@@ -6,6 +6,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:super_app/modules/OCR_QR_AUTH/features/auth/presentation/views/sign_up_screen.dart';
 import 'package:super_app/modules/OCR_QR_AUTH/features/auth/presentation/views/widgets/custom_text_field.dart';
 import 'package:super_app/modules/OCR_QR_AUTH/features/auth/presentation/views/widgets/custome_btn.dart';
+import 'package:super_app/modules/Ordering_Notifications/core/utils/snackbar_message.dart';
 import '../../../../constants.dart';
 import '../../../home/presentation/views/agent_home_view.dart';
 import '../../../home/presentation/views/consumer_home_view.dart';
@@ -32,6 +33,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is LoginSuccessState) {
+          log("login success");
+          log(BlocProvider.of<AuthCubit>(context).user.nid!.status.toString());
           setState(() {
             isLoading = false;
           });
@@ -62,6 +65,10 @@ class _LoginScreenState extends State<LoginScreen> {
               withNavBar: false,
               pageTransitionAnimation: PageTransitionAnimation.cupertino,
             );
+          }
+          else if(BlocProvider.of<AuthCubit>(context).user.nid!.status ==
+              'Pending'){
+            SnackBarMessage.showErrorSnackBar(message: "Pending For Approval", context: context);
           }
         } else if (state is LoginFaliureState) {
           setState(() {

@@ -1,10 +1,10 @@
-import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:super_app/modules/OCR_QR_AUTH/features/auth/presentation/views/submit_national_id_screen.dart';
 import '../../../../constants.dart';
 import '../../../../core/models/national_id_model.dart';
@@ -105,7 +105,7 @@ class _CreateNationalIdPageState extends State<CreateNationalIdPage> {
               height: 50,
             ),
             _isLoading
-                ? const Center(
+                ? Center(
               child: Text(
                 'The Process Might take several minuets',
                 textAlign: TextAlign.center,
@@ -117,7 +117,7 @@ class _CreateNationalIdPageState extends State<CreateNationalIdPage> {
               height: 20,
             ),
             _isLoading
-                ? const CircularProgressIndicator() // Show circular progress indicator while loading
+                ? CircularProgressIndicator() // Show circular progress indicator while loading
                 : _responseText == null
                 ? Center(
               child: MaterialButton(
@@ -129,7 +129,7 @@ class _CreateNationalIdPageState extends State<CreateNationalIdPage> {
                   // BlocProvider.of<ServerBloc>(context).add(
                   //     GetServerLinkEvent(serverEntity: server));
                   _responseText = await _triggerServer(context);
-                  log(
+                  print(
                       "The response has been returned is : $_responseText");
                 },
                 color: Constants.primaryGreen,
@@ -175,7 +175,7 @@ class _CreateNationalIdPageState extends State<CreateNationalIdPage> {
                     context,
                     settings: RouteSettings(
                         name: SubmitNationalIdScreen.routeName,arguments: nationalId),
-                    screen: const SubmitNationalIdScreen(),
+                    screen: SubmitNationalIdScreen(),
                     withNavBar: false,
                     pageTransitionAnimation:
                     PageTransitionAnimation.cupertino,
@@ -192,9 +192,9 @@ class _CreateNationalIdPageState extends State<CreateNationalIdPage> {
             ),
           ],
         )
-            : const Column(
+            : Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             Center(
               child: Text(
                 'No image selected',
@@ -224,7 +224,7 @@ class _CreateNationalIdPageState extends State<CreateNationalIdPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text(
+          title: Text(
             'Choose an option',
             style: TextStyle(
               fontWeight: FontWeight.w600,
@@ -234,7 +234,7 @@ class _CreateNationalIdPageState extends State<CreateNationalIdPage> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ListTile(
-                leading: const Icon(
+                leading: Icon(
                   Icons.photo_library,
                   color: Colors.orange,
                 ),
@@ -253,11 +253,12 @@ class _CreateNationalIdPageState extends State<CreateNationalIdPage> {
                     final imageBytes = File(_imageFile!.path).readAsBytesSync();
                     _base64Image = base64Encode(imageBytes);
                   } else {
+                    print("There is no Image detected.");
                   }
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.camera_alt, color: Colors.orange),
+                leading: Icon(Icons.camera_alt, color: Colors.orange),
                 title: const Text(
                   'Take a Photo',
                   style: TextStyle(fontWeight: FontWeight.w500),
@@ -273,6 +274,7 @@ class _CreateNationalIdPageState extends State<CreateNationalIdPage> {
                     final imageBytes = File(_imageFile!.path).readAsBytesSync();
                     _base64Image = base64Encode(imageBytes);
                   } else {
+                    print("There is no Image detected.");
                   }
                 },
               ),
@@ -288,11 +290,12 @@ class _CreateNationalIdPageState extends State<CreateNationalIdPage> {
       _isLoading = true;
     });
     // String baseUrl = "https://10.90.12.51:5000/cashout";
-    String baseUrl = "https://ecfa-154-178-30-130.ngrok-free.app/cashout";
+    String baseUrl = await getLocalHostLink();
+    print("BASE URL Of Localhost : $baseUrl");
     OcrModel res;
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse(baseUrl),
+      Uri.parse(baseUrl.replaceAll(' ', '')),
     );
     Map<String, String> headers = {"Content-type": "multipart/form-data"};
     request.files.add(
@@ -308,11 +311,15 @@ class _CreateNationalIdPageState extends State<CreateNationalIdPage> {
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       String responseData = await response.stream.bytesToString();
+      print("Success : ${responseData}");
       res = _decodeUnicodeEscape(responseData);
+      print("Success : ${res.ocrData}");
       setState(() {});
     } else {
       String responseData = await response.stream.bytesToString();
+      print("Success : ${responseData}");
       res = _decodeUnicodeEscape(responseData);
+      print("Failure : ${res.ocrData}");
       setState(() {});
     }
     setState(() {
@@ -321,8 +328,20 @@ class _CreateNationalIdPageState extends State<CreateNationalIdPage> {
     return res;
   }
 
+  static Future<String> getLocalHostLink() async {
+    final Dio dio = Dio();
+    final Response response = await dio.get(
+      "https://ahly-momken-cashout.onrender.com/api/v1/serverlink/1",);
+    if (response.statusCode == 200) {
+      return response.data;
+    } else {
+      throw Exception('${response.data['message']}');
+    }
+  }
+
   OcrModel _decodeUnicodeEscape(String input) {
     Map<String, dynamic> decodedJson = json.decode(input);
     return OcrModel.fromJson(decodedJson);
   }
+
 }
