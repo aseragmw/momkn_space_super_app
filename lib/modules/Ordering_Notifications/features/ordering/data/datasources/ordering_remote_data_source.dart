@@ -14,12 +14,19 @@ abstract class OrderingRemoteDataSource {
   Future<OrderEntity> createOrder();
   Future<InvoiceEntity> createInvoice();
 }
-const String myToken ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA2OTkxMjMsImV4cCI6MTcyMDc4NTUyM30.RNLw461_Km6IbVsiwgcHZwQWTJ-XH2LroKYUsVNWRdE";
+ String myToken ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA4NjQ1MzAsImV4cCI6MTcyMDk1MDkzMH0.9gdbooP-_mfrs7_fPvZe1MDyhf4SgJu7tkzsHezLqk8";
 
-
+Future<void>getToken()async{
+  final res = await ApiCaller.postHTTP("https://erp-backend-supply.onrender.com/user/login", {
+    "user_Mobile_Number":"3",
+    "user_Password":"0"
+  });
+  myToken = res.data["accessToken"];
+}
 class OrderingRemoteDataSourceImplWithDio extends OrderingRemoteDataSource {
   @override
   Future<OrderEntity> createOrder() async {
+    await getToken();
     final cartItems = CartViewModel.cartItems;
     final List <dynamic>SKUS =[];
     for(CartItem item in cartItems){
@@ -52,7 +59,7 @@ class OrderingRemoteDataSourceImplWithDio extends OrderingRemoteDataSource {
   }
 
   Future<InvoiceEntity> createInvoicee(OrderEntity order) async {
-    try {
+    await getToken();    try {
       final jsonRes = await ApiCaller.postHTTP(
           '/invoice/create',
           {
@@ -73,7 +80,7 @@ class OrderingRemoteDataSourceImplWithDio extends OrderingRemoteDataSource {
 
   @override
   Future<List<OrderWithInvoiceEntity>> getOrdersWithInvoices() async {
-    try {
+    await getToken();    try {
       final jsonRes = await ApiCaller.getHTTP('/order/', {"user_Mobile_Number": "3"},
           myToken);
       List<OrderWithInvoiceEntity> ordersWithInvoices = [];

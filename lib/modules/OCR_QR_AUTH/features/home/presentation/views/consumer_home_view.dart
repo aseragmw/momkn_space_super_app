@@ -227,9 +227,9 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                             const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                BillWidget(billTitle: "Telecom"),
-                                BillWidget(billTitle: "Electricity"),
-                                BillWidget(billTitle: "Water"),
+                                BillWidget(billTitle: "Telecom",icon:Icons.phone),
+                                BillWidget(billTitle: "Electricity",icon:Icons.electric_bolt),
+                                BillWidget(billTitle: "Water",icon:Icons.water_drop),
                               ],
                             ),
                             SizedBox(
@@ -359,8 +359,9 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
 }
 
 class BillWidget extends StatelessWidget {
-  const BillWidget({super.key, required this.billTitle});
+  const BillWidget({super.key, required this.billTitle, required this.icon});
   final String billTitle;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -372,7 +373,8 @@ class BillWidget extends StatelessWidget {
             color: AppTheme.lightGreyColor,
             border: Border.all(color: AppTheme.orangeColor),
           ),
-          padding: EdgeInsets.all(context.screenAspectRatio * 15),
+          child: Icon(icon,color: AppTheme.primaryGreenColor,),
+          padding: EdgeInsets.all(context.screenAspectRatio * 7),
         ),
         Text(
           billTitle,

@@ -12,8 +12,15 @@ import 'package:super_app/modules/Ordering_Notifications/features/products/domai
 import 'package:super_app/modules/Ordering_Notifications/features/products/domain/entities/sub_category_entity.dart';
 
 import '../models/brand_model.dart';
-const String myToken ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA2OTkxMjMsImV4cCI6MTcyMDc4NTUyM30.RNLw461_Km6IbVsiwgcHZwQWTJ-XH2LroKYUsVNWRdE";
-abstract class ProductsRemoteDataSource {
+ String myToken ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA4NjQ1MzAsImV4cCI6MTcyMDk1MDkzMH0.9gdbooP-_mfrs7_fPvZe1MDyhf4SgJu7tkzsHezLqk8";
+Future<void>getToken()async{
+  final res = await ApiCaller.postHTTP("https://erp-backend-supply.onrender.com/user/login", {
+    "user_Mobile_Number":"3",
+    "user_Password":"0"
+  });
+  myToken = res.data["accessToken"];
+}
+ abstract class ProductsRemoteDataSource {
   Future<List<CatalogEntity>> getCatalosCategoriesSubCategories();
   Future<List<BrandModel>> getBrands(SubCategoryEntity subCategoryEntity);
   Future<List<SKUEntity>> getSKUs(BrandEntity brandEntity);
@@ -22,6 +29,7 @@ abstract class ProductsRemoteDataSource {
 class ProductsRemoteDataSourceImplWithDio extends ProductsRemoteDataSource {
   @override
   Future<List<CatalogEntity>> getCatalosCategoriesSubCategories() async {
+    await getToken();
     try {
       final jsonRes = await ApiCaller.getHTTP(
           '/catalogTree/get/663cf8d5831af4f499b4bdb6',
@@ -49,6 +57,7 @@ myToken);
 
   @override
   Future<List<SKUEntity>> getSKUs(BrandEntity brandEntity) async {
+    await getToken();
     try {
       final jsonRes = await ApiCaller.getHTTP(
           '/sku/get/${brandEntity.brandId}',
@@ -66,6 +75,7 @@ myToken);
   }
 
   Future<List<SKUEntity>> getSKUsByBrandId(String brandId) async {
+    await getToken();
     try {
       final jsonRes = await ApiCaller.getHTTP(
           '/sku/get/$brandId',
@@ -85,6 +95,7 @@ myToken);
   @override
   Future<List<BrandModel>> getBrands(
       SubCategoryEntity subCategoryEntity) async {
+    await getToken();
     try {
       if(subCategoryEntity.brands.length==0){
         return [];
@@ -107,6 +118,7 @@ myToken);
 }
 
 Future<List<CategoryModel>> getCategories(String catalogId) async {
+  await getToken();
   try {
     final jsonRes = await ApiCaller.getHTTP('/category/get/$catalogId', null,
         myToken);
@@ -130,6 +142,7 @@ Future<List<CategoryModel>> getCategories(String catalogId) async {
 }
 
 Future<List<SubCategoryModel>> getSubCategories(String categoryId) async {
+  await getToken();
   try {
     final jsonRes = await ApiCaller.getHTTP(
         '/subCategory/get/$categoryId',
