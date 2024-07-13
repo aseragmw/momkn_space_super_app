@@ -5,7 +5,10 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:super_app/modules/OCR_QR_AUTH/features/home/presentation/views/qr_result_view.dart';
 
+import '../../../../../../shared/app_constants.dart';
+import '../../../../../Ordering_Notifications/core/utils/cache_helper.dart';
 import '../../../../constants.dart';
+import '../../../auth/presentation/views/splash_screen.dart';
 
 class AgentHomeView extends StatefulWidget {
   const AgentHomeView({super.key});
@@ -22,6 +25,13 @@ class _AgentHomeViewState extends State<AgentHomeView> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Scanning QR code'),
+          leading: IconButton(onPressed: ()async{
+            await CacheHelper.clear();
+            AppConstants.clearConstants();
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const SplashScreen(),
+            ));
+          },icon: Icon(Icons.logout),),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),

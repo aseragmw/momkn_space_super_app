@@ -11,6 +11,7 @@ import 'package:super_app/modules/Ordering_Notifications/core/utils/cache_helper
 import 'package:super_app/modules/Ordering_Notifications/features/notificartions/presentation/bloc/bloc/notification_bloc.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/ordering/presentation/bloc/bloc/ordering_bloc.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/presentation/bloc/bloc/products_bloc.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/service_booking_history/presentation/bloc/bloc/service_booking_history_bloc.dart';
 import 'package:super_app/modules/services/domain/useCase/getServicesCategories_useCase.dart';
 import 'package:super_app/modules/services/domain/useCase/serviceProvider_useCase.dart';
 import 'package:super_app/modules/services/screens/AgentService/agentServiceDetails.dart';
@@ -55,6 +56,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => NotificationBloc(),
+        ),
+        BlocProvider(
+          create: (context) => ServiceBookingHistoryBloc(),
         ),
         BlocProvider(
           create: (context) => ProductsBloc(),

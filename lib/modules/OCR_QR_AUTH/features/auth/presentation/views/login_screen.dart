@@ -143,36 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     text: "Password",
                     icon: const Icon(Icons.remove_red_eye),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: isChecked,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                isChecked = value!;
-                              });
-                            },
-                          ),
-                          const Text('Save password'),
-                        ],
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Handle forgot password action
-                        },
-                        child: const Text(
-                          'Forgot password?',
-                          style: TextStyle(
-                              color: Colors
-                                  .blue), // Customize text style if needed
-                        ),
-                      ),
-                    ],
-                  )
-                ],
+                   ],
               ),
             ),
             Padding(
@@ -224,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               child: const Center(
                 child: Text(
-                  "Don’t Know your login info? Check your Email",
+                  "Don’t have an account? Signup",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Constants.primaryGreen),

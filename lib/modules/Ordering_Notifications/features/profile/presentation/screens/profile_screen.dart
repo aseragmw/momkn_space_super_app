@@ -12,6 +12,8 @@ import 'package:super_app/modules/Ordering_Notifications/features/profile/presen
 import 'package:super_app/modules/gaming/super_screens/super_type_handling_screen.dart' hide CustomButton;
 import 'package:super_app/shared/app_constants.dart';
 
+import '../../../service_booking_history/presentation/screens/booking_history_screen.dart';
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -59,6 +61,21 @@ class ProfileScreen extends StatelessWidget {
             title: 'Invoices History',
             onPress: () async {
              Navigator.of(context).push(MaterialPageRoute(builder: (_)=>const OrdersHistoryScreen()));
+            },
+            buttonColor: AppTheme.primaryGreenColor,
+            borderRadius: AppTheme.boxRadius,
+            borderColor: AppTheme.primaryGreenColor,
+            buttonWidth: context.screenWidth * 0.7,
+            fontSize: AppTheme.fontSize16(context),
+            fontColor: AppTheme.whiteColor,
+          ),
+          SizedBox(
+            height: context.screenHeight * 0.02,
+          ),
+          CustomButton(
+            title: 'Services Bookings History',
+            onPress: () async {
+              Navigator.of(context).push(MaterialPageRoute(builder: (_)=>const BookingsHistoryScreen()));
             },
             buttonColor: AppTheme.primaryGreenColor,
             borderRadius: AppTheme.boxRadius,

@@ -5,13 +5,16 @@ import 'package:super_app/modules/Ordering_Notifications/core/widgets/custom_but
 import 'package:super_app/modules/Ordering_Notifications/core/widgets/main_layout.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/ordering/domain/entities/order_with_invoice_entity.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/ordering/presentation/widgets/order_details_item_widget.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/service_booking_history/domain/entities/service_booking_history_entity.dart';
 import 'package:super_app/screens/wholesalers_screen.dart';
 import 'package:super_app/widgets/powered_by_ahly_momkn_widget.dart';
 
-class OrderDetailsScreen extends StatelessWidget {
-  final OrderWithInvoiceEntity orderWithInvoice;
+import '../widgets/booking_details_item_widget.dart';
 
-  const OrderDetailsScreen({super.key, required this.orderWithInvoice});
+class BookingDetailsScreen extends StatelessWidget {
+  final ServiceBookingHistoryModel booking;
+
+  const BookingDetailsScreen({super.key, required this.booking});
   @override
   Widget build(BuildContext context) {
     return MainLayout(
@@ -21,7 +24,7 @@ class OrderDetailsScreen extends StatelessWidget {
         children: [
           Center(
             child: Text(
-              "Invoice Details",
+              "Booking Details",
               style:
                   TextStyle(fontWeight: AppTheme.fontWeight700, fontSize: AppTheme.fontSize26(context), color: AppTheme.primaryGreenColor),
             ),
@@ -30,13 +33,13 @@ class OrderDetailsScreen extends StatelessWidget {
             height: context.screenHeight * 0.025,
             width: context.screenWidth,
           ),
-          OrderDetailsItem(title: "Payment Reference", content: orderWithInvoice.invoice.paymentReference),
-          OrderDetailsItem(title: "Payment Method", content: orderWithInvoice.invoice.paymentOption),
-          OrderDetailsItem(title: "Total Price", content: orderWithInvoice.invoice.invoiceAmount.toString()),
-          OrderDetailsItem(title: "Invoice Date", content: orderWithInvoice.invoice.invoiceDate.substring(0, 10)),
-          OrderDetailsItem(title: "Orginaization ID", content: orderWithInvoice.invoice.orgId),
-          OrderDetailsItem(title: "Username", content: orderWithInvoice.invoice.username),
-          OrderDetailsItem(title: "Order Date", content: orderWithInvoice.order.orderDate.substring(0, 10)),
+          BookingDetailsItem(title: "Name", content: booking.service!.name!),
+          BookingDetailsItem(title: "Description", content: booking.service!.description!),
+          BookingDetailsItem(title: "State", content: booking.service!.state!),
+          BookingDetailsItem(title: "Type", content: booking.service!.type!),
+          BookingDetailsItem(title: "Fees", content: booking.service!.fees!.toString()),
+
+
           SizedBox(
             height: context.screenHeight * 0.025,
           ),

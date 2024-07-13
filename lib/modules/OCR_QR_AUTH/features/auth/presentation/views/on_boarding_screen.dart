@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:super_app/modules/OCR_QR_AUTH/features/auth/presentation/views/widgets/custome_btn.dart';
+import 'package:super_app/modules/Ordering_Notifications/core/utils/app_theme.dart';
 
 import 'login_screen.dart';
 
@@ -19,10 +20,10 @@ class OnBoardingScreen extends StatelessWidget {
               image: AssetImage("assets/logo.png"),
             ),
           ),
-          const Text(
-            "Supper App",
+           Text(
+            "Super App",
             style: TextStyle(
-                color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
+                color: AppTheme.primaryGreenColor, fontSize: AppTheme.fontSize24(context), fontWeight: FontWeight.bold,),
           ),
           const SizedBox(
             height: 110,

@@ -21,8 +21,12 @@ class ServiceBookingHistoryRemoteDataSourceImplWithDio
       List<ServiceBookingHistoryModel> bookings = [];
       for (var element in jsonRes.data["booking"]) {
         log(element.toString());
+        final res = await ApiCaller.postHTTP(
+          'https://superapp-production.up.railway.app/serviceWithId',
+          {"_id": element["serviceId"]},
+        );
 
-          bookings.add(ServiceBookingHistoryModel.fromJson(element));
+          bookings.add(ServiceBookingHistoryModel.fromJson(res.data));
       }
       return bookings;
     } catch (e) {

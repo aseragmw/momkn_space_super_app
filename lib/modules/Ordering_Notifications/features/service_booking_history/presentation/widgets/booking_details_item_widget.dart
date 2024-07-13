@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_size.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/utils/app_theme.dart';
 
-class OrderDetailsItem extends StatelessWidget {
-  const OrderDetailsItem({super.key, required this.title, required this.content});
+class BookingDetailsItem extends StatelessWidget {
+  const BookingDetailsItem({super.key, required this.title, required this.content});
   final String title;
   final String content;
 

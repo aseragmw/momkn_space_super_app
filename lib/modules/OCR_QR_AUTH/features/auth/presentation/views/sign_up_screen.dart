@@ -27,7 +27,7 @@ class SignUpScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          "SignUp",
+          "Signup",
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.transparent,
@@ -126,7 +126,6 @@ class SignUpScreen extends StatelessWidget {
                 PageTransitionAnimation.cupertino,
               );
             }),
-            const Center(child: Text("Don’t Know your login info? Check your Email",style: TextStyle(fontWeight: FontWeight.bold,color: Constants.primaryGreen),)),
           ],
         ),
       ),

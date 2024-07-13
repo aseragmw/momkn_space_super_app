@@ -11,41 +11,46 @@ import 'package:super_app/modules/Ordering_Notifications/features/ordering/prese
 import 'package:super_app/modules/Ordering_Notifications/core/widgets/custom_button.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/widgets/custom_circular_progress_indicator.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/widgets/main_layout.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/service_booking_history/presentation/bloc/bloc/service_booking_history_bloc.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/service_booking_history/presentation/bloc/bloc/service_booking_history_event.dart';
 import 'package:super_app/widgets/powered_by_ahly_momkn_widget.dart';
 
-class OrdersHistoryScreen extends StatelessWidget {
-  const OrdersHistoryScreen({super.key});
+import '../bloc/bloc/service_booking_history_state.dart';
+import '../widgets/booking_history_item_widget.dart';
+
+class BookingsHistoryScreen extends StatelessWidget {
+  const BookingsHistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    context.read<OrderingBloc>().add(const GetOrdersWithInvoicesEvent());
+    context.read<ServiceBookingHistoryBloc>().add(const GetBookingsEvent());
     return MainLayout(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CustomAppBar(showBackCursor: true,),
           Text(
-            "Invoices History",
+            "Service Bookings History",
             style: TextStyle(fontWeight: AppTheme.fontWeight700, fontSize: AppTheme.fontSize26(context), color: AppTheme.primaryGreenColor),
           ),
           SizedBox(
             height: context.screenHeight * 0.025,
           ),
-          BlocConsumer<OrderingBloc, OrderingState>(
+          BlocConsumer<ServiceBookingHistoryBloc, ServiceBookingHistoryState>(
             builder: (context, state) {
-              if (state is GetOrdersWithInvoicesLoadingState) {
+              if (state is GetBookingsLoadingState) {
                 return const CustomCircularProgressIndicator(
                   color: AppTheme.primaryGreenColor,
                 );
-              } else if (state is GetOrdersWithInvoicesSuccessState) {
+              } else if (state is GetBookingsSuccessState) {
                 return ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: state.ordersWithInvoices.length,
+                  itemCount: state.bookings.length,
                   itemBuilder: (context, index) {
-                    final orderWithInvoice = state.ordersWithInvoices[index];
-                    return OrderHistoryItem(
-                      orderWithInvoice: orderWithInvoice,
+                    final booking = state.bookings[index];
+                    return BookingHistoryItem(
+                      booking: booking,
                     );
                   },
                 );
@@ -54,21 +59,11 @@ class OrdersHistoryScreen extends StatelessWidget {
               }
             },
             listener: (context, state) {
-              if (state is GetOrdersWithInvoicesErrorState) {
+              if (state is GetBookingsErrorState) {
                 SnackBarMessage.showErrorSnackBar(message: state.message, context: context);
               }
             },
           ),
-          // ListView(
-          //   children: [
-          //     OrderHistoryItem(),
-          //     OrderHistoryItem(),
-          //     OrderHistoryItem(),
-          //     OrderHistoryItem(),
-          //     OrderHistoryItem(),
-          //     OrderHistoryItem(),
-          //   ],
-          // ),
           SizedBox(
             height: context.screenHeight * 0.025,
           ),

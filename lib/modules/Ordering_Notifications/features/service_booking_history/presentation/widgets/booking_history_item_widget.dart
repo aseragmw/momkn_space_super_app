@@ -3,11 +3,14 @@ import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_
 import 'package:super_app/modules/Ordering_Notifications/core/utils/app_theme.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/ordering/domain/entities/order_with_invoice_entity.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/ordering/presentation/screens/order_details_screen.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/service_booking_history/domain/entities/service_booking_history_entity.dart';
 import 'package:super_app/widgets/gradient_border_container_card.dart';
 
-class OrderHistoryItem extends StatelessWidget {
-  const OrderHistoryItem({super.key, required this.orderWithInvoice});
-  final OrderWithInvoiceEntity orderWithInvoice;
+import '../screens/booking_details_screen.dart';
+
+class BookingHistoryItem extends StatelessWidget {
+  const BookingHistoryItem({super.key, required this.booking});
+  final ServiceBookingHistoryModel booking;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,7 @@ class OrderHistoryItem extends StatelessWidget {
             SizedBox(
               width: context.screenWidth * 0.4,
               child: Text(
-                "Order ID: ${orderWithInvoice.invoice.orderId}",
+                "Service Name: ${booking.service!.name!.toString()}",
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontWeight: AppTheme.fontWeight700, fontSize: AppTheme.fontSize16(context)),
               ),
@@ -30,8 +33,8 @@ class OrderHistoryItem extends StatelessWidget {
             InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => OrderDetailsScreen(
-                    orderWithInvoice: orderWithInvoice,
+                  builder: (context) => BookingDetailsScreen(
+                    booking: booking,
                   ),
                 ));
               },
@@ -48,12 +51,12 @@ class OrderHistoryItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Date: ${orderWithInvoice.invoice.invoiceDate.substring(0, 10)}",
+              "Fees: ${booking.service!.fees!.toString()}",
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontWeight: AppTheme.fontWeight700, fontSize: AppTheme.fontSize16(context)),
             ),
             Text(
-              "Total: ${orderWithInvoice.invoice.invoiceAmount.toStringAsFixed(2)}\$",
+              "State: ${booking.service!.state!.toString()}",
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontWeight: AppTheme.fontWeight700, fontSize: AppTheme.fontSize16(context), color: AppTheme.blackColor),
             )
