@@ -95,7 +95,7 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        height: MediaQuery.of(context).size.height * 0.25,
+                        height: context.screenAspectRatio * 110,
                         decoration: const BoxDecoration(color: AppTheme.transparentColor),
                         child: Stack(children: [
                           Container(

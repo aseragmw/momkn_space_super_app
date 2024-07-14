@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_size.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/utils/app_theme.dart';
+import 'package:super_app/modules/Ordering_Notifications/core/widgets/custom_app_bar.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/widgets/custom_button.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/widgets/main_layout.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/ordering/domain/entities/order_with_invoice_entity.dart';
@@ -19,13 +20,19 @@ class OrderDetailsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Center(
-            child: Text(
-              "Invoice Details",
-              style:
-                  TextStyle(fontWeight: AppTheme.fontWeight700, fontSize: AppTheme.fontSize26(context), color: AppTheme.primaryGreenColor),
-            ),
-          ),
+          CustomAppBar(title:Text(
+            "Invoice Details",
+            style:
+            TextStyle(fontWeight: AppTheme.fontWeight700, fontSize: AppTheme.fontSize26(context), color: AppTheme.primaryGreenColor),
+          ) ,showBackCursor: true,)
+          // Center(
+          //   child: Text(
+          //     "Invoice Details",
+          //     style:
+          //         TextStyle(fontWeight: AppTheme.fontWeight700, fontSize: AppTheme.fontSize26(context), color: AppTheme.primaryGreenColor),
+          //   ),
+          // ),
+          ,
           SizedBox(
             height: context.screenHeight * 0.025,
             width: context.screenWidth,

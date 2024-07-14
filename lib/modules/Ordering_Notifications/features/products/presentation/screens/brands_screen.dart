@@ -17,7 +17,6 @@ class BrandsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<ProductsBloc>().add(GetBrandsWithSKUsEvent(subCategoryEntity));
     return MainLayout(
         body: Column(
       children: [
@@ -42,35 +41,23 @@ class BrandsScreen extends StatelessWidget {
           height: context.screenAspectRatio * 10,
         ),
 
-        BlocConsumer<ProductsBloc, ProductsState>(
-          listener: (BuildContext context, ProductsState state) {},
-          builder: (BuildContext context, ProductsState state) {
-            if(state is GetBrandsWithSKUsLoadingState){
-              return const CustomCircularProgressIndicator(color: AppTheme.primaryGreenColor,);
-            }
-            else if(state is GetBrandsWithSKUsSuccessState){
-              return GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
-                itemCount: state.brands.length,
-                itemBuilder: (context, index) {
-                  final brand = state.brands[index];
-                  return InkWell(onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_)=>SKUsScreen(brand: brand)));
-                  },
-                    child: CatalogCategoryCardWidget(
-                        title: brand.brandName,
-                        imgUrl: "assets/product2.png"),
-                  );
-                },
-              );
-            }
-              else{
-                return const SizedBox();
-            }
+        GridView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          shrinkWrap: true,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2),
+          itemCount: subCategoryEntity.brands.length,
+          itemBuilder: (context, index) {
+            final brand = subCategoryEntity.brands[index];
+            return InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => SKUsScreen(brand: brand)));
+              },
+              child: CatalogCategoryCardWidget(
+                  title: brand.brandName, imgUrl: "assets/product2.png"),
+            );
           },
         ),
 

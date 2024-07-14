@@ -37,3 +37,17 @@ class GetBrandsWithSKUsSuccessState extends ProductsState {
 
   const GetBrandsWithSKUsSuccessState({required this.brands});
 }
+
+class GetSKUsLoadingState extends ProductsState {}
+
+class GetSKUsErrorState extends ProductsState {
+  final String message;
+
+  const GetSKUsErrorState({required this.message});
+}
+
+class GetSKUsSuccessState extends ProductsState {
+  final List<SKUEntity> skus;
+
+  const GetSKUsSuccessState({required this.skus});
+}

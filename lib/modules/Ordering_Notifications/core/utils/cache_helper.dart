@@ -58,6 +58,7 @@ class CacheHelper {
     }
     return [];
   }
+
   static Future<void> cacheCatalogs(List<CatalogModel> catalogs) async {
     final jsonList = catalogs.map((catalog) => catalog.toJson()).toList();
     final jsonString = json.encode(jsonList);

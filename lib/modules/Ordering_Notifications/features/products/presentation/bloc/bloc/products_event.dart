@@ -16,3 +16,8 @@ class GetBrandsWithSKUsEvent extends ProductsEvent {
   final SubCategoryEntity subCategoryEntity;
   const GetBrandsWithSKUsEvent(this.subCategoryEntity);
 }
+
+class GetSKUsEvent extends ProductsEvent {
+  final BrandEntity brand;
+  const GetSKUsEvent(this.brand);
+}

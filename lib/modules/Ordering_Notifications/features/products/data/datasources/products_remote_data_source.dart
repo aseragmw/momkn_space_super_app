@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:super_app/modules/Ordering_Notifications/core/constants/api_conatsants.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/network/api_caller.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/utils/cache_helper.dart';
-import 'package:super_app/modules/Ordering_Notifications/features/products/catalogs_cache_helper.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/data/models/catalog_model.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/data/models/category_model.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/data/models/sku_model.dart';
@@ -110,6 +109,25 @@ class ProductsRemoteDataSourceImplWithDio extends ProductsRemoteDataSource {
     }
   }
 }
+Future<List<BrandModel>> getBrandById(
+    String subCategoryID) async {
+  try {
+
+    final jsonRes = await ApiCaller.getHTTP(
+        '/brand/get/${subCategoryID}',
+        null,
+        TokenGetter.myToken);
+    List<BrandModel> brands = [];
+    for (var brandJson in jsonRes.data) {
+      brands.add(BrandModel.fromJson(brandJson));
+    }
+    return brands;
+  } catch (e) {
+    log("${e.toString()} error in get Brands in datasource");
+    rethrow;
+  }
+}
+
 
 Future<List<CategoryModel>> getCategories(String catalogId) async {
   try {
@@ -142,11 +160,19 @@ Future<List<SubCategoryModel>> getSubCategories(String categoryId) async {
         TokenGetter.myToken);
     List<SubCategoryModel> subCategories = [];
     for (var subCategoryJson in jsonRes.data) {
+      List<BrandModel> brands = [];
+      log(subCategoryJson.toString());
+
+      if (subCategoryJson["brands"].length != 0) {
+        log("henaaa???");
+        brands = await getBrandById(subCategoryJson["sub_Category_ID"]);
+        log("wala henaaa???");
+      }
       subCategories.add(SubCategoryModel(
           categoryId: subCategoryJson[categoryIdAPIKey],
           subCategoryName: subCategoryJson[subCategoryNameAPIKey],
           subCategoryId: subCategoryJson[subCategoryIdAPIKey],
-          brands: subCategoryJson[brandsAPIKey]));
+          brands: brands));
     }
     return subCategories;
   } catch (e) {

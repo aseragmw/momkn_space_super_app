@@ -9,7 +9,5 @@ import '../entities/sku_entity.dart';
 abstract class ProductsRepository {
   Future<Either<Failure, List<CatalogEntity>>> getCatalosCategoriesSubCategories();
   Future<Either<Failure, List<BrandEntity>>> getBrands(SubCategoryEntity subCategoryEntity);
-
   Future<Either<Failure, List<SKUEntity>>> getSKUs(BrandEntity brandEntity);
-
 }
