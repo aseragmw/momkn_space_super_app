@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_size.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/extentions/string_extensions.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/notificartions/CachedNotifications.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/notificartions/presentation/screens/notifications_screen.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/domain/entities/catalog_entity.dart';
 import 'package:super_app/modules/gaming/super_screens/super_type_handling_screen.dart';
@@ -51,7 +53,9 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
   @override
   Widget build(BuildContext context) {
     context.read<ProductsBloc>().add(const GetCatalogsCategoriesSubCategoriesEvent());
-
+    for(int i =0;i<CachedNotifications.data.length;i++){
+      log(CachedNotifications.data[i].toString());
+    }
     return BlocProvider(
       create: (context) => homeViewModel,
       child: BlocBuilder<HomeScreenViewModel, HomeStates>(
@@ -346,11 +350,18 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                             ),
                             BlocConsumer<ProductsBloc, ProductsState>(
                               builder: (context, state) {
+                                log("hene keda keda");
                                 if (state is GetCatalogsCategoriesSubCategoriesLoadingState) {
                                   return const CustomCircularProgressIndicator(
                                     color: AppTheme.primaryGreenColor,
                                   );
-                                }  return ListView.builder(
+                                }  else if (state is GetCatalogsCategoriesSubCategoriesSuccessState){
+                                  catalogs = state.catalogs;
+                                  // for(int i=0;i<catalogs.length;i++){
+                                  //   log(catalogs[i].toString());
+                                  // }
+                                }
+                                return ListView.builder(
                                   physics: const NeverScrollableScrollPhysics(),
                                   padding: EdgeInsets.zero,
                                   shrinkWrap: true,
@@ -372,11 +383,14 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                                 );
                               },
                               listener: (context, state) {
+                                log("gena ${state.runtimeType.toString()}");
+
                                 if (state is GetCatalogsCategoriesSubCategoriesErrorState) {
                                   SnackBarMessage.showErrorSnackBar(message: state.message, context: context);
                                 }
                                 else if (state is GetCatalogsCategoriesSubCategoriesSuccessState){
                                   catalogs = state.catalogs;
+
                                 }
                               },
                             ),

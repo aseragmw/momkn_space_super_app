@@ -12,7 +12,7 @@ class NotificationEntity extends Equatable {
   const NotificationEntity( {required this.id, required this.title, required this.body,required this.amount, required this.effectiveDate, required this.userMobileNumber, required this.senderName});
 
   @override
-  List<Object?> get props => [id,title,body,effectiveDate,userMobileNumber,senderName];
+  List<Object?> get props => [id,title,body,amount,effectiveDate,userMobileNumber,senderName];
 
 }
 

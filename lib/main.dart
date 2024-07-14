@@ -23,27 +23,14 @@ import 'package:super_app/modules/services/screens/Home/cubit/home_view_model.da
 import 'package:super_app/modules/services/screens/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:super_app/shared/app_constants.dart';
+import 'package:super_app/token_getter.dart';
 
 void main() async {
-  log("1");
   WidgetsFlutterBinding.ensureInitialized();
-  log("1");
   await Firebase.initializeApp();
-  log("1");
   await CacheHelper.init();
-  log("1");
-   await AppConstants.initAppConstants();
-  log("1");
-   if(AppConstants.cachedCurrentUserObject!=null){
-     log("1");
-     log("user id is ${AppConstants.cachedCurrentUserObject!.userID}");
-     log("1");
-
-   }
-  log("1");
-
-
-
+  await AppConstants.initAppConstants();
+  // await TokenGetter.getToken();
   runApp(const MyApp());
 }
 

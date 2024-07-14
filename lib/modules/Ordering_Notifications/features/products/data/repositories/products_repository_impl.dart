@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/errors/failures.dart';
+import 'package:super_app/modules/Ordering_Notifications/core/utils/cache_helper.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/products/catalogs_cache_helper.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/data/datasources/products_remote_data_source.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/data/models/sku_model.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/domain/entities/brand_entity.dart';
@@ -18,7 +20,16 @@ class ProductsRepositoryImpl extends ProductsRepository {
   @override
   Future<Either<Failure, List<CatalogEntity>>> getCatalosCategoriesSubCategories() async {
     try {
-      final val = await productsRemoteDataSource.getCatalosCategoriesSubCategories();
+      List<CatalogEntity> val = [];
+      final catalogsCached = await CacheHelper.containsKey("catalogs_key");
+      if(catalogsCached){
+        val = await CacheHelper.getCachedCatalogs() ;
+        log(val.length.toString());
+      }
+      else{
+        val = await productsRemoteDataSource.getCatalosCategoriesSubCategories();
+
+      }
       return Right(val);
     } catch (e) {
       log(e.toString());

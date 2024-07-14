@@ -2,11 +2,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:super_app/modules/OCR_QR_AUTH/features/auth/presentation/views/sign_up_screen.dart';
 import 'package:super_app/modules/OCR_QR_AUTH/features/auth/presentation/views/widgets/custom_text_field.dart';
 import 'package:super_app/modules/OCR_QR_AUTH/features/auth/presentation/views/widgets/custome_btn.dart';
+import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_size.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/utils/snackbar_message.dart';
+import '../../../../../Ordering_Notifications/core/utils/app_theme.dart';
 import '../../../../constants.dart';
 import '../../../home/presentation/views/agent_home_view.dart';
 import '../../../home/presentation/views/consumer_home_view.dart';
@@ -82,31 +85,62 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text(
-            "Login",
-            style: TextStyle(color: Colors.black),
-          ),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.grey,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ),
-        body: ListView(
+         body: ListView(
           children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.25,
+              decoration: const BoxDecoration(color: AppTheme.transparentColor),
+              child: Stack(children: [
+                Container(
+                  decoration: const BoxDecoration(
+                      color: Color(0xFF0A271D),
+                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(40), bottomRight: Radius.circular(40))),
+                  height: context.screenHeight * 0.2,
+                  child: Stack(
+                    children: [
+                      SvgPicture.asset(
+                        "assets/ahly_momkn_bg_home.svg",
+                        width: context.screenWidth,
+                        fit: BoxFit.fill,
+                      ),
+                      Align(
+                        child: Image.asset(
+                          "assets/logo.png",
+                          height: context.screenAspectRatio * 50,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: context.screenAspectRatio * 15),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Icon(
+                                Icons.arrow_back_ios,
+                                color: AppTheme.whiteColor,
+                                size: context.screenAspectRatio * 15,
+                              ),
+                            ),
+                          )),
+                    ],
+                  ),
+                ),
+                ]),
+            ),
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Center(child: Text("Login",style: TextStyle(color: AppTheme.primaryGreenColor,fontSize: AppTheme.fontSize28(context),fontWeight: AppTheme.fontWeight600),)),
+                  SizedBox(
+                    height: context.screenAspectRatio*10,
+                  ),
                   const Text("Email",
                       style: TextStyle(color: Constants.textFieldHintColor)),
                   const SizedBox(
@@ -117,8 +151,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     text: "Email",
                     icon: const Icon(Icons.person_outline),
                   ),
-                  const SizedBox(
-                    height: 50,
+                   SizedBox(
+                    height: context.screenAspectRatio*5,
                   ),
                   const Text("National ID",
                       style: TextStyle(color: Constants.textFieldHintColor)),
@@ -130,8 +164,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     text: "National ID",
                     icon: const Icon(Icons.person_outline),
                   ),
-                  const SizedBox(
-                    height: 50,
+                   SizedBox(
+                    height: context.screenAspectRatio*5,
                   ),
                   const Text("Password",
                       style: TextStyle(color: Constants.textFieldHintColor)),
@@ -145,6 +179,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                    ],
               ),
+            ),
+            SizedBox(
+              height: context.screenAspectRatio*10,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -182,6 +219,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         //     PageTransitionAnimation.cupertino,
                         //    );
                       }),
+            ),
+            SizedBox(
+              height: context.screenAspectRatio*10,
             ),
             GestureDetector(
               onTap: () {

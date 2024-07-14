@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:super_app/modules/Ordering_Notifications/core/constants/api_conatsants.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/network/api_caller.dart';
+import 'package:super_app/modules/Ordering_Notifications/core/utils/cache_helper.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/products/catalogs_cache_helper.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/data/models/catalog_model.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/data/models/category_model.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/data/models/sku_model.dart';
@@ -11,15 +13,9 @@ import 'package:super_app/modules/Ordering_Notifications/features/products/domai
 import 'package:super_app/modules/Ordering_Notifications/features/products/domain/entities/sku_entity.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/domain/entities/sub_category_entity.dart';
 
+import '../../../../../../token_getter.dart';
 import '../models/brand_model.dart';
- String myToken ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA4NjQ1MzAsImV4cCI6MTcyMDk1MDkzMH0.9gdbooP-_mfrs7_fPvZe1MDyhf4SgJu7tkzsHezLqk8";
-Future<void>getToken()async{
-  final res = await ApiCaller.postHTTP("https://erp-backend-supply.onrender.com/user/login", {
-    "user_Mobile_Number":"3",
-    "user_Password":"0"
-  });
-  myToken = res.data["accessToken"];
-}
+
  abstract class ProductsRemoteDataSource {
   Future<List<CatalogEntity>> getCatalosCategoriesSubCategories();
   Future<List<BrandModel>> getBrands(SubCategoryEntity subCategoryEntity);
@@ -27,14 +23,14 @@ Future<void>getToken()async{
 }
 
 class ProductsRemoteDataSourceImplWithDio extends ProductsRemoteDataSource {
+
   @override
   Future<List<CatalogEntity>> getCatalosCategoriesSubCategories() async {
-    await getToken();
     try {
       final jsonRes = await ApiCaller.getHTTP(
           '/catalogTree/get/663cf8d5831af4f499b4bdb6',
           null,
-myToken);
+          TokenGetter.myToken);
       List<CatalogModel> catalogs = [];
       for (var catalogJson in jsonRes.data) {
         List<CategoryModel> categories = [];
@@ -48,6 +44,7 @@ myToken);
             catalogStatus: catalogJson[catalogStatusAPIKey],
             categories: categories));
       }
+      await CacheHelper.cacheCatalogs(catalogs);
       return catalogs;
     } catch (e) {
       log("${e.toString()} error in get catalogs in datasource");
@@ -57,12 +54,11 @@ myToken);
 
   @override
   Future<List<SKUEntity>> getSKUs(BrandEntity brandEntity) async {
-    await getToken();
     try {
       final jsonRes = await ApiCaller.getHTTP(
           '/sku/get/${brandEntity.brandId}',
           null,
-          myToken);
+          TokenGetter.myToken);
       List<SKUModel> SKUs = [];
       for (var skuJson in jsonRes.data) {
         SKUs.add(SKUModel.fromJson(skuJson));
@@ -75,12 +71,11 @@ myToken);
   }
 
   Future<List<SKUEntity>> getSKUsByBrandId(String brandId) async {
-    await getToken();
     try {
       final jsonRes = await ApiCaller.getHTTP(
           '/sku/get/$brandId',
           null,
-          myToken);
+          TokenGetter.myToken);
       List<SKUModel> SKUs = [];
       for (var skuJson in jsonRes.data) {
         SKUs.add(SKUModel.fromJson(skuJson));
@@ -95,7 +90,6 @@ myToken);
   @override
   Future<List<BrandModel>> getBrands(
       SubCategoryEntity subCategoryEntity) async {
-    await getToken();
     try {
       if(subCategoryEntity.brands.length==0){
         return [];
@@ -103,7 +97,7 @@ myToken);
       final jsonRes = await ApiCaller.getHTTP(
           '/brand/get/${subCategoryEntity.subCategoryId}',
           null,
-          myToken);
+          TokenGetter.myToken);
       List<BrandModel> brands = [];
       for (var brandJson in jsonRes.data) {
          final List<SKUEntity> skus = await getSKUsByBrandId(brandJson[brandIdAPIKey]);
@@ -118,10 +112,9 @@ myToken);
 }
 
 Future<List<CategoryModel>> getCategories(String catalogId) async {
-  await getToken();
   try {
     final jsonRes = await ApiCaller.getHTTP('/category/get/$catalogId', null,
-        myToken);
+        TokenGetter.myToken);
     List<CategoryModel> categories = [];
     for (var categoryJson in jsonRes.data) {
       List<SubCategoryModel> subCategories = [];
@@ -142,12 +135,11 @@ Future<List<CategoryModel>> getCategories(String catalogId) async {
 }
 
 Future<List<SubCategoryModel>> getSubCategories(String categoryId) async {
-  await getToken();
   try {
     final jsonRes = await ApiCaller.getHTTP(
         '/subCategory/get/$categoryId',
         null,
-        myToken);
+        TokenGetter.myToken);
     List<SubCategoryModel> subCategories = [];
     for (var subCategoryJson in jsonRes.data) {
       subCategories.add(SubCategoryModel(

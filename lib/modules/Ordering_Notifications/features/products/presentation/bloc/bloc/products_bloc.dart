@@ -26,7 +26,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         either.fold((l) {
           emit(GetCatalogsCategoriesSubCategoriesErrorState(message: l.message));
         }, (r) {
-          log("fel blocccc");
+          log("fel blocccc ${r.first.catalogName}");
           emit(GetCatalogsCategoriesSubCategoriesSuccessState(catalogs: r));
         });
       },

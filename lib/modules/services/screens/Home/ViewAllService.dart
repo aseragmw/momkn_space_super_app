@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -178,10 +179,18 @@ class CategoryItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15.0),
               ),
               child: category.image != null && category.image!.secureUrl != null
-                  ? Image.network(
-                category.image!.secureUrl!,
+                  ? CachedNetworkImage(
+                imageUrl:                 category.image!.secureUrl!,
+
                 fit: BoxFit.cover,
+                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                    CircularProgressIndicator(value: downloadProgress.progress,),
+                errorWidget: (context, url, error) => Icon(Icons.error),
               )
+              // Image.network(
+              //   category.image!.secureUrl!,
+              //   fit: BoxFit.cover,
+              // )
                   : Icon(
                 Icons.ac_unit_rounded,
                 color: Colors.white,

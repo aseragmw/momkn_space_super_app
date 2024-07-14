@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:super_app/modules/OCR_QR_AUTH/features/auth/presentation/views/submit_national_id_screen.dart';
+import 'package:super_app/modules/Ordering_Notifications/core/utils/app_theme.dart';
 import '../../../../constants.dart';
 import '../../../../core/models/national_id_model.dart';
 import '../../../../core/models/ocr_model.dart';
@@ -36,9 +37,9 @@ class _CreateNationalIdPageState extends State<CreateNationalIdPage> {
       appBar:
       AppBar(
         centerTitle: true,
-        title: const Text(
-          "Login",
-          style: TextStyle(color: Colors.black),
+        title:  Text(
+          "Create National ID",
+          style: TextStyle(color: AppTheme.primaryGreenColor,fontSize: AppTheme.fontSize24(context),fontWeight: AppTheme.fontWeight600),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,

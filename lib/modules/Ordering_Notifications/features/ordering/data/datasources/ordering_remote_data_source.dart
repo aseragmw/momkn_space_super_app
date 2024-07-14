@@ -8,25 +8,17 @@ import 'package:super_app/modules/Ordering_Notifications/features/ordering/domai
 import 'package:super_app/modules/Ordering_Notifications/features/ordering/domain/entities/order_entity.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/ordering/domain/entities/order_with_invoice_entity.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/presentation/viewmodels/cart_viewmodel.dart';
+import 'package:super_app/token_getter.dart';
 
 abstract class OrderingRemoteDataSource {
   Future<List<OrderWithInvoiceEntity>> getOrdersWithInvoices();
   Future<OrderEntity> createOrder();
   Future<InvoiceEntity> createInvoice();
 }
- String myToken ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDdhOGRiY2QxM2FiMTczMzA4ZjEzNSIsInVzZXJfTW9iaWxlX051bWJlciI6IjMiLCJpYXQiOjE3MjA4NjQ1MzAsImV4cCI6MTcyMDk1MDkzMH0.9gdbooP-_mfrs7_fPvZe1MDyhf4SgJu7tkzsHezLqk8";
 
-Future<void>getToken()async{
-  final res = await ApiCaller.postHTTP("https://erp-backend-supply.onrender.com/user/login", {
-    "user_Mobile_Number":"3",
-    "user_Password":"0"
-  });
-  myToken = res.data["accessToken"];
-}
 class OrderingRemoteDataSourceImplWithDio extends OrderingRemoteDataSource {
   @override
   Future<OrderEntity> createOrder() async {
-    await getToken();
     final cartItems = CartViewModel.cartItems;
     final List <dynamic>SKUS =[];
     for(CartItem item in cartItems){
@@ -46,7 +38,7 @@ class OrderingRemoteDataSourceImplWithDio extends OrderingRemoteDataSource {
             },
             "SKUs": SKUS
           },
-          myToken);
+          TokenGetter.myToken);
       log(jsonRes.data.toString());
       final OrderModel order = OrderModel.fromJson(jsonRes.data);
       await createInvoicee(order);
@@ -59,7 +51,7 @@ class OrderingRemoteDataSourceImplWithDio extends OrderingRemoteDataSource {
   }
 
   Future<InvoiceEntity> createInvoicee(OrderEntity order) async {
-    await getToken();    try {
+    try {
       final jsonRes = await ApiCaller.postHTTP(
           '/invoice/create',
           {
@@ -69,7 +61,7 @@ class OrderingRemoteDataSourceImplWithDio extends OrderingRemoteDataSource {
             "username": "Ahmed Serag",
             "invoice_Amount": double.parse(order.orderAmount)
           },
-          myToken);
+          TokenGetter.myToken);
       final invoice = InvoiceModel.fromJson(jsonRes.data);
       return invoice;
     } catch (e) {
@@ -80,9 +72,9 @@ class OrderingRemoteDataSourceImplWithDio extends OrderingRemoteDataSource {
 
   @override
   Future<List<OrderWithInvoiceEntity>> getOrdersWithInvoices() async {
-    await getToken();    try {
+      try {
       final jsonRes = await ApiCaller.getHTTP('/order/', {"user_Mobile_Number": "3"},
-          myToken);
+          TokenGetter.myToken);
       List<OrderWithInvoiceEntity> ordersWithInvoices = [];
       for (var element in jsonRes.data) {
         log(element.toString());

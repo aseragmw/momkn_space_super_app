@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_size.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/extentions/string_extensions.dart';
@@ -62,13 +63,21 @@ class IconCard2 extends StatelessWidget {
           ),
           child: imageUrl != null
               ? ClipOval(
-            child: Image.network(
-              imageUrl!,
+            child: CachedNetworkImage(
+              imageUrl: imageUrl!,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Icon(Icons.error, color: color);
-              },
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  CircularProgressIndicator(value: downloadProgress.progress),
+              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
+
+            // Image.network(
+            //   imageUrl!,
+            //   fit: BoxFit.cover,
+            //   errorBuilder: (context, error, stackTrace) {
+            //     return Icon(Icons.error, color: color);
+            //   },
+            // ),
           )
               : Icon(
             Icons.image_not_supported,

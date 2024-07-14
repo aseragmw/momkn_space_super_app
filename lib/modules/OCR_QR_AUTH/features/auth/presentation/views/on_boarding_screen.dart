@@ -39,14 +39,7 @@ class OnBoardingScreen extends StatelessWidget {
                 height: 50,
                 child: CustomButton(
                   func: () {
-                    Navigator.of(context).pushAndRemoveUntil(
-                      CupertinoPageRoute(
-                        builder: (BuildContext context) {
-                          return const LoginScreen();
-                        },
-                      ),
-                      (_) => false,
-                    );
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_)=>LoginScreen()));
                   },
                   text: "Start",
                 ),

@@ -4,8 +4,8 @@ class ApiCaller {
   static String url = 'https://erp-backend-supply.onrender.com/';
   static BaseOptions opts = BaseOptions(
     baseUrl: url,
-    connectTimeout: const Duration(seconds: 40),
-    receiveTimeout: const Duration(seconds: 40),
+    connectTimeout: const Duration(seconds: 200),
+    receiveTimeout: const Duration(seconds: 200),
   );
   static final dio = Dio(opts);
 

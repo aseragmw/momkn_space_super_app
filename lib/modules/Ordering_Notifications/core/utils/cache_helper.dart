@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../features/notificartions/data/models/notification_model.dart';
+import '../../features/products/data/models/catalog_model.dart';
+
 class CacheHelper {
   static late SharedPreferences _prefs;
 
@@ -39,5 +42,35 @@ class CacheHelper {
 
   static Future<bool> clear() async {
     return await _prefs.clear();
+  }
+
+  static Future<void> cacheNotifications(List<NotificationModel> notifications) async {
+    final jsonList = notifications.map((notification) => notification.toJson()).toList();
+    final jsonString = json.encode(jsonList);
+    await CacheHelper.put('notifications_key', jsonString);
+  }
+
+  static Future<List<NotificationModel>> getCachedNotifications() async {
+    final jsonString = CacheHelper.get('notifications_key');
+    if (jsonString != null) {
+      final List<dynamic> jsonData = json.decode(jsonString);
+      return jsonData.map((json) => NotificationModel.fromJson(json)).toList();
+    }
+    return [];
+  }
+  static Future<void> cacheCatalogs(List<CatalogModel> catalogs) async {
+    final jsonList = catalogs.map((catalog) => catalog.toJson()).toList();
+    final jsonString = json.encode(jsonList);
+    await CacheHelper.put('catalogs_key', jsonString);
+  }
+
+   static Future<List<CatalogModel>> getCachedCatalogs() async {
+    final jsonString = CacheHelper.get('catalogs_key');
+    if (jsonString != null) {
+      final List<dynamic> jsonData = json.decode(jsonString);
+      final cats = jsonData.map((json) => CatalogModel.fromJson(json)).toList();
+      return cats;
+    }
+    return [];
   }
 }

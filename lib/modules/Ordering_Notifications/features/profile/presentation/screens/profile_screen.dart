@@ -7,6 +7,7 @@ import 'package:super_app/modules/Ordering_Notifications/core/utils/cache_helper
 import 'package:super_app/modules/Ordering_Notifications/core/widgets/custom_app_bar.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/widgets/custom_button.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/widgets/main_layout.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/notificartions/CachedNotifications.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/ordering/presentation/screens/orders_history_screen.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/profile/presentation/widgets/profile_attribute_widget.dart';
 import 'package:super_app/modules/gaming/super_screens/super_type_handling_screen.dart' hide CustomButton;
@@ -90,6 +91,7 @@ class ProfileScreen extends StatelessWidget {
           CustomButton(
             title: 'Log Out',
             onPress: () async {
+              CachedNotifications.data=[];
               await CacheHelper.clear();
               AppConstants.clearConstants();
               Navigator.of(context).push(MaterialPageRoute(

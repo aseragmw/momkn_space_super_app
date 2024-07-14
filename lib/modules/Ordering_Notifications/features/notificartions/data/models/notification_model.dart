@@ -8,14 +8,14 @@ class NotificationModel extends NotificationEntity {
  
 
   factory NotificationModel.fromJson(Map<String, dynamic> jsonData) {
-    return NotificationModel(amount:jsonData["amount"],id: jsonData["id"], title: jsonData["title"], body: jsonData["body"], effectiveDate: jsonData["effectiveDate"], userMobileNumber: jsonData["userMobileNumber"], senderName: jsonData["senderName"]);
+    return NotificationModel(amount:jsonData["amount"]??0,id: jsonData["id"]??0, title: jsonData["title"]??"null", body: jsonData["body"]??"null", effectiveDate: jsonData["effectiveDate"]??"null", userMobileNumber: jsonData["userMobileNumber"]??"null", senderName: jsonData["senderName"]??"null");
   }
   Map<String, dynamic> toJson() {
     return {
       idAPIKey:id,
       titleAPIKey:title,
       bodyAPIKey:body,
-      effectiveDataAPIKey:effectiveDate,
+      "effectiveDate":effectiveDate,
       userMobileNumberAPIKey:userMobileNumber,
       senderNameAPIKey:senderName,
       "amount":amount

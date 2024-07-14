@@ -35,7 +35,7 @@ class NotificationWidget extends StatelessWidget {
                   fontSize: AppTheme.fontSize18(context), color: AppTheme.primaryGreenColor, fontWeight: AppTheme.fontWeight500),
             ),
             Text(
-              notificationEntity.effectiveDate.substring(0,10),
+              notificationEntity.effectiveDate!="null"? notificationEntity.effectiveDate.substring(0,10):"Date",
               overflow: TextOverflow.ellipsis,
 
               style: TextStyle(fontSize: AppTheme.fontSize14(context), color: AppTheme.greyHintColor, fontWeight: AppTheme.fontWeight600),
