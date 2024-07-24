@@ -291,7 +291,7 @@ class _CreateNationalIdPageState extends State<CreateNationalIdPage> {
       _isLoading = true;
     });
     // String baseUrl = "https://10.90.12.51:5000/cashout";
-    String baseUrl = await getLocalHostLink();
+    String baseUrl = "http://135.236.152.99:5000/superapp";
     print("BASE URL Of Localhost : $baseUrl");
     OcrModel res;
     var request = http.MultipartRequest(

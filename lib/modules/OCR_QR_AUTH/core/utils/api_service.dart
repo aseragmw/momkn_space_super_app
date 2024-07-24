@@ -6,10 +6,10 @@ import '../models/user_model.dart';
 import 'package:image/image.dart' as img;
 
 class ApiService {
-  static String createNewUserBaseUrl = 'https://super-app-backend.onrender.com/users/createNewUser';
-  static String loginBaseUrl = 'https://super-app-backend.onrender.com/users/signIn';
+  static String createNewUserBaseUrl = 'https://super-app-backend-production.up.railway.app/users/createNewUser';
+  static String loginBaseUrl = 'https://super-app-backend-production.up.railway.app/users/signIn';
 
-  static String scanQrCodeBaseUrl = 'https://super-app-backend.onrender.com/accessControl/addAccessControlEntry';
+  static String scanQrCodeBaseUrl = 'https://super-app-backend-production.up.railway.app/accessControl/addAccessControlEntry';
 
   static Future<Map<String, dynamic>> createNewUser({required UserModel userModel}) async {
     final Dio dio = Dio();
