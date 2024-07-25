@@ -14,7 +14,7 @@ class BookingHistoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GradientBorderContainerCard(
+    return booking.service == null ?SizedBox():GradientBorderContainerCard(
         content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [

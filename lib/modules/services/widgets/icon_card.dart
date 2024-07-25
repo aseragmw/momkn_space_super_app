@@ -55,8 +55,8 @@ class IconCard2 extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: context.screenAspectRatio*30,
-          height:  context.screenAspectRatio*30,
+          width: context.screenAspectRatio*27,
+          height:  context.screenAspectRatio*27,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: color.withOpacity(0.1),
@@ -85,7 +85,7 @@ class IconCard2 extends StatelessWidget {
             color: Colors.green,
           ),
         ),
-        const SizedBox(height: 5),
+         SizedBox(height:context.screenAspectRatio*7.5 ),
         Text(
           label.capitalize(),
           style: TextStyle(

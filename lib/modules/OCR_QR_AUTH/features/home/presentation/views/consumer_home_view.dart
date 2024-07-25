@@ -305,7 +305,7 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                                         },
                                         child: SizedBox(
                                           child: Container(
-                                            margin: EdgeInsets.symmetric(horizontal: context.screenAspectRatio*12),
+                                            margin: EdgeInsets.symmetric(horizontal: context.screenAspectRatio*4),
                                             child: IconCard2(
                                               imageUrl: category.image?.secureUrl,
                                               label: category.categoryEnglishName!,

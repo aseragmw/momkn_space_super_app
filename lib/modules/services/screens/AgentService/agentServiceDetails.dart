@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -123,6 +125,7 @@ class _AgentServiceDetailsScreen extends State<AgentServiceDetailsScreen> {
                           child: ListView.builder(
                             itemCount: serviceViewModel.agentServiceList?.length ?? 0,
                             itemBuilder: (context, index) {
+                              log(serviceViewModel.agentServiceList![index].toString());
                               return buildDoctorCard(service: serviceViewModel.agentServiceList![index]);
                             },
                           ),

@@ -61,7 +61,7 @@ class _ServiceCalendarScreenState extends State<ServiceCalendarScreen> {
         builder: (context, state) {
           if (state is ServiceLoadingState) {
             if(serviceViewModel.agentCalenderList != null &&serviceViewModel.agentCalenderList!.isNotEmpty) {
-              print(serviceViewModel.agentCalenderList);
+              log(serviceViewModel.agentCalenderList.toString());
               return Container(
                 color: Colors.white,
                 child: Center(
