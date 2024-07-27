@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_size.dart';
@@ -11,8 +13,9 @@ import '../../../../core/utils/app_theme.dart';
 import '../../../../core/widgets/main_layout.dart';
 
 class SKUDetailsScreen extends StatelessWidget {
-  const SKUDetailsScreen({super.key, required this.SKU});
+  const SKUDetailsScreen({super.key, required this.SKU, required this.imgBytes});
   final SKUEntity SKU;
+  final Uint8List imgBytes;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +26,9 @@ class SKUDetailsScreen extends StatelessWidget {
         CustomAppBar(
           showBackCursor: true,
         ),
+        imgBytes.isNotEmpty?Center(
+          child: Image.memory(imgBytes)
+        ):SizedBox(),
         Center(
           child: Text(
             SKU.skuName,
@@ -78,7 +84,7 @@ class SKUDetailsScreen extends StatelessWidget {
           height: context.screenHeight * 0.05,
         ),
         Center(child: CustomButton(title: "Add To Cart", onPress: (){
-          CartViewModel.addItemToCart(SKU);
+          CartViewModel.addItemToCart(SKU,imgBytes);
           SnackBarMessage.showSuccessSnackBar(message: "Added To Cart", context: context);
         }, buttonColor: AppTheme.primaryGreenColor, borderRadius: AppTheme.boxRadius, borderColor: AppTheme.primaryGreenColor, buttonWidth: context.screenWidth*0.8, fontSize: AppTheme.fontSize20(context),fontColor: AppTheme.whiteColor,))
       ],

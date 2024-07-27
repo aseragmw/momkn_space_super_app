@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../features/cashout/domain/entities/debit_transaction.dart';
 import '../../features/notificartions/data/models/notification_model.dart';
 import '../../features/products/data/models/catalog_model.dart';
 
@@ -68,9 +70,26 @@ class CacheHelper {
    static Future<List<CatalogModel>> getCachedCatalogs() async {
     final jsonString = CacheHelper.get('catalogs_key');
     if (jsonString != null) {
+      log("catalogs not null");
       final List<dynamic> jsonData = json.decode(jsonString);
+      log("data is : ${jsonData.toString()}");
       final cats = jsonData.map((json) => CatalogModel.fromJson(json)).toList();
       return cats;
+    }
+    return [];
+  }
+
+  static Future<void> cacheDebitTransactions(List<DebitTransactionEntity> transactions) async {
+    final jsonList = transactions.map((transaction) => transaction.toJson()).toList();
+    final jsonString = json.encode(jsonList);
+    await CacheHelper.put('debit_transactions_key', jsonString);
+  }
+
+  static Future<List<DebitTransactionEntity>> getCachedDebitTransactions() async {
+    final jsonString = CacheHelper.get('debit_transactions_key');
+    if (jsonString != null) {
+      final List<dynamic> jsonData = json.decode(jsonString);
+      return jsonData.map((json) => DebitTransactionEntity.fromJson(json)).toList();
     }
     return [];
   }

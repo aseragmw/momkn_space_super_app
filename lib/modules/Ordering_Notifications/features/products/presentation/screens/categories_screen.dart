@@ -7,6 +7,9 @@ import 'package:super_app/modules/Ordering_Notifications/features/products/domai
 import 'package:super_app/modules/Ordering_Notifications/features/products/presentation/screens/sub_categories_screen.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/presentation/widgets/catalog_category_card.dart';
 
+import '../../../../core/widgets/custom_circular_progress_indicator.dart';
+import 'catalogs_screen.dart';
+
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key, required this.catalog});
   final CatalogEntity catalog;
@@ -41,14 +44,33 @@ class CategoriesScreen extends StatelessWidget {
           itemCount: catalog.categories.length,
           itemBuilder: (context, index) {
             final category = catalog.categories[index];
-            return InkWell(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SubCategoriesScreen(category: category),
-                  ));
-                },
-                child: CatalogCategoryCardWidget(title: category.categoryName, imgUrl: "assets/product2.png"));
-          },
+            return FutureBuilder(future:getPicBytes(category), builder: (context,snapshot){
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CustomCircularProgressIndicator(color: AppTheme.primaryGreenColor,),
+                );
+              }  else if(snapshot.connectionState == ConnectionState.done){
+                if(snapshot.hasData){
+                  print("genaa");
+                  return InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SubCategoriesScreen(category: category),
+                        ));
+                      },
+                      child: CatalogCategoryCardWidget(title: category.categoryName, imgUrl: "assets/product2.png", imgBytes: snapshot.data!,),);
+
+                }
+                else {
+                  return SizedBox();
+                }
+              }
+              else{
+                return SizedBox();
+              }
+            });
+             },
         )
         // GridView(
         //   physics: NeverScrollableScrollPhysics(),

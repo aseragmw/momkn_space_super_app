@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
@@ -291,7 +292,6 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                               height: context.screenHeight * 0.15,
                               child: Center(
                                 child: ListView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
                                   padding: EdgeInsets.zero,
                                   scrollDirection: Axis.horizontal,
                                   shrinkWrap: true,
@@ -368,17 +368,38 @@ class _ConsumerHomeViewState extends State<ConsumerHomeView> {
                                   itemCount: catalogs.length>5?5:catalogs.length,
                                   itemBuilder: (context, index) {
                                     final catalog = catalogs[index];
-                                    return InkWell(
-                                      onTap: () {
-                                        Navigator.of(context).push(MaterialPageRoute(
-                                          builder: (context) => CategoriesScreen(catalog: catalog),
-                                        ));
-                                      },
-                                      child: OrderNowWidget(
-                                          serviceTitle: catalogs[index].catalogName,
-                                          icon: Icons.shield,
-                                          backgroundColor: cardColors[index % 4]),
-                                    );
+                                    return FutureBuilder(future:getPicBytes(catalog), builder: (context,snapshot){
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CustomCircularProgressIndicator(color: AppTheme.primaryGreenColor,),
+                                        );
+                                      }  else if(snapshot.connectionState == ConnectionState.done){
+                                        if(snapshot.hasData){
+                                          print("genaa");
+                                          return InkWell(
+                                            onTap: () {
+                                              Navigator.of(context).push(MaterialPageRoute(
+                                                builder: (context) => CategoriesScreen(catalog: catalog),
+                                              ));
+                                            },
+                                            child: OrderNowWidget(
+                                                serviceTitle: catalogs[index].catalogName,
+                                                icon: Icons.shield,
+                                                backgroundColor: cardColors[index % 4], imgBytes: snapshot.data!,),
+                                          );
+                                        }
+                                        else {
+                                          return SizedBox();
+
+                                        }
+                                      }
+                                      else{
+                                        return SizedBox();
+                                      }
+                                    });
+
+
                                   },
                                 );
                               },
@@ -468,10 +489,11 @@ class ServicesBookingWidget extends StatelessWidget {
 }
 
 class OrderNowWidget extends StatelessWidget {
-  const OrderNowWidget({super.key, required this.serviceTitle, required this.icon, required this.backgroundColor});
+  const OrderNowWidget({super.key, required this.serviceTitle, required this.icon, required this.backgroundColor, required this.imgBytes});
   final String serviceTitle;
   final IconData icon;
   final Color backgroundColor;
+  final Uint8List imgBytes;
 
   @override
   Widget build(BuildContext context) {
@@ -480,13 +502,13 @@ class OrderNowWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
+          imgBytes.isEmpty?Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
               color: backgroundColor,
             ),
             padding: EdgeInsets.all(context.screenAspectRatio * 15),
-          ),
+          ):ClipRRect(borderRadius: BorderRadius.circular(50),child: Image.memory(imgBytes,width: context.screenAspectRatio*35,fit: BoxFit.fill,)),
           SizedBox(
             width: context.screenAspectRatio * 5,
           ),

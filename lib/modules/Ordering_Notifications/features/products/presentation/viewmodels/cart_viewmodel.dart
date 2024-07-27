@@ -1,10 +1,11 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:super_app/modules/Ordering_Notifications/features/products/domain/entities/sku_entity.dart';
 
 class CartViewModel{
   static List<CartItem> cartItems=[];
-  static addItemToCart(SKUEntity skuEntity){
+  static addItemToCart(SKUEntity skuEntity,Uint8List imgBytes){
     bool found= false;
     for(CartItem item in cartItems){
       if(item.skuEntity.skuID == skuEntity.skuID){
@@ -12,7 +13,7 @@ class CartViewModel{
       }
     }
     if(!found){
-      cartItems.add(CartItem(skuEntity, 1));
+      cartItems.add(CartItem(skuEntity, 1,imgBytes));
     }
   }
 
@@ -49,7 +50,8 @@ static double getTotalPrice(){
 class CartItem{
   SKUEntity skuEntity ;
   int itemCount ;
-  CartItem(this.skuEntity,this.itemCount);
+  Uint8List imgBytes;
+  CartItem(this.skuEntity,this.itemCount,this.imgBytes);
   void increment(){
     itemCount++;
     log("incremented");

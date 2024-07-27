@@ -55,6 +55,7 @@ class _ServiceCalendarScreenState extends State<ServiceCalendarScreen> {
     BookingEntity.serviceId=args.serviceId!;
 
 
+
     return BlocProvider(
       create: (context) => serviceViewModel..getAgentCalender(args.id!),
       child: BlocBuilder<ServiceScreenViewModel, ServiceStates>(

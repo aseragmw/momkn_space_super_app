@@ -4,8 +4,8 @@ class ApiCaller {
   static String url = 'http://52.21.250.81:54321/';
   static BaseOptions opts = BaseOptions(
     baseUrl: url,
-    connectTimeout: const Duration(seconds: 200),
-    receiveTimeout: const Duration(seconds: 200),
+    connectTimeout: const Duration(seconds: 20),
+    receiveTimeout: const Duration(seconds: 20),
   );
   static final dio = Dio(opts);
 

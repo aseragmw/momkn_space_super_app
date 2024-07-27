@@ -1,13 +1,10 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/utils/app_theme.dart';
 
 class CatalogCategoryCardWidget extends StatelessWidget {
-  const CatalogCategoryCardWidget({super.key, required this.title, required this.imgUrl, required this.imgBytes});
+  const CatalogCategoryCardWidget({super.key, required this.title, required this.imgUrl});
   final String title;
   final String imgUrl;
-  final Uint8List imgBytes;
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +17,10 @@ class CatalogCategoryCardWidget extends StatelessWidget {
           Expanded(
             child: ClipRRect(
               borderRadius: AppTheme.boxRadius,
-              child: imgBytes.isEmpty?Image.asset(
+              child: Image.asset(
                 imgUrl,
                 fit: BoxFit.cover,
-              ):Image.memory(imgBytes),
+              ),
             ),
           ),
           Padding(

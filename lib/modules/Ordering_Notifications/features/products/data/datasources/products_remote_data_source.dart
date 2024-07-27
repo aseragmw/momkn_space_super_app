@@ -27,7 +27,7 @@ class ProductsRemoteDataSourceImplWithDio extends ProductsRemoteDataSource {
   Future<List<CatalogEntity>> getCatalosCategoriesSubCategories() async {
     try {
       final jsonRes = await ApiCaller.getHTTP(
-          '/catalogTree/get/663cf8d5831af4f499b4bdb6',
+          '/catalogTree/get/66a3a7aa87263d73e31de666',
           null,
           TokenGetter.myToken);
       List<CatalogModel> catalogs = [];

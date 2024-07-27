@@ -8,9 +8,11 @@ import 'package:super_app/modules/OCR_QR_AUTH/features/auth/presentation/manager
 import 'package:super_app/modules/OCR_QR_AUTH/features/auth/presentation/views/splash_screen.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/utils/app_theme.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/utils/cache_helper.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/cashout/presentation/bloc/bloc/cashout_bloc.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/notificartions/presentation/bloc/bloc/notification_bloc.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/ordering/presentation/bloc/bloc/ordering_bloc.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/presentation/bloc/bloc/products_bloc.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/profile/presentation/screens/profile_screen.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/service_booking_history/presentation/bloc/bloc/service_booking_history_bloc.dart';
 import 'package:super_app/modules/services/domain/useCase/getServicesCategories_useCase.dart';
 import 'package:super_app/modules/services/domain/useCase/serviceProvider_useCase.dart';
@@ -55,6 +57,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<AuthCubit>(
           create: (context) => AuthCubit(),
+        ),
+        BlocProvider<CashoutBloc>(
+          create: (context) => CashoutBloc(),
         ),
         BlocProvider(
           create: (context) =>

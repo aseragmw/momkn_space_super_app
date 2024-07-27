@@ -11,6 +11,8 @@ import 'package:super_app/modules/Ordering_Notifications/features/products/prese
 import 'package:super_app/modules/Ordering_Notifications/features/products/presentation/screens/skus_screen.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/presentation/widgets/catalog_category_card.dart';
 
+import 'catalogs_screen.dart';
+
 class BrandsScreen extends StatelessWidget {
   const BrandsScreen({super.key, required this.subCategoryEntity});
   final SubCategoryEntity subCategoryEntity;
@@ -50,14 +52,33 @@ class BrandsScreen extends StatelessWidget {
           itemCount: subCategoryEntity.brands.length,
           itemBuilder: (context, index) {
             final brand = subCategoryEntity.brands[index];
-            return InkWell(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => SKUsScreen(brand: brand)));
-              },
-              child: CatalogCategoryCardWidget(
-                  title: brand.brandName, imgUrl: "assets/product2.png"),
-            );
+            return FutureBuilder(future:getPicBytes(brand), builder: (context,snapshot){
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CustomCircularProgressIndicator(color: AppTheme.primaryGreenColor,),
+                );
+              }  else if(snapshot.connectionState == ConnectionState.done){
+                if(snapshot.hasData){
+                  print("genaa");
+                  return InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => SKUsScreen(brand: brand)));
+                    },
+                    child: CatalogCategoryCardWidget(
+                        title: brand.brandName, imgUrl: "assets/product2.png", imgBytes: snapshot.data!,),
+                  );
+                }
+                else {
+                  return SizedBox();
+                }
+              }
+              else{
+                return SizedBox();
+              }
+            });
+
           },
         ),
 

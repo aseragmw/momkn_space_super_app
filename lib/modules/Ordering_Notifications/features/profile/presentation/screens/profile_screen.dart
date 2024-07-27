@@ -7,6 +7,7 @@ import 'package:super_app/modules/Ordering_Notifications/core/utils/cache_helper
 import 'package:super_app/modules/Ordering_Notifications/core/widgets/custom_app_bar.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/widgets/custom_button.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/widgets/main_layout.dart';
+import 'package:super_app/modules/Ordering_Notifications/features/cashout/presentation/screens/cashou_screen.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/notificartions/CachedNotifications.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/ordering/presentation/screens/orders_history_screen.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/profile/presentation/widgets/profile_attribute_widget.dart';
@@ -53,6 +54,21 @@ class ProfileScreen extends StatelessWidget {
 
           SizedBox(
             height: context.screenHeight * 0.02,
+          ),
+          SizedBox(
+            height: context.screenHeight * 0.02,
+          ),
+          CustomButton(
+            title: 'Cash Out',
+            onPress: () async {
+              Navigator.of(context).push(MaterialPageRoute(builder: (_)=>const CashoutScreen()));
+            },
+            buttonColor: AppTheme.primaryGreenColor,
+            borderRadius: AppTheme.boxRadius,
+            borderColor: AppTheme.primaryGreenColor,
+            buttonWidth: context.screenWidth * 0.7,
+            fontSize: AppTheme.fontSize16(context),
+            fontColor: AppTheme.whiteColor,
           ),
           SizedBox(
             height: context.screenHeight * 0.02,

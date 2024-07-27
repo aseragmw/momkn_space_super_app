@@ -24,12 +24,14 @@ class _CartItemCardWidgetState extends State<CartItemCardWidget> {
       child: Column(
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(
+              widget.item.imgBytes.isEmpty? Image.asset(
                 "assets/product2.png",
                 fit: BoxFit.fill,
                 width: context.screenWidth * 0.25,
-              ),
+              ):Image.memory(widget.item.imgBytes,fit: BoxFit.fill,
+                width: context.screenWidth * 0.25,),
               SizedBox(
                 width: context.screenWidth * 0.01,
               ),
@@ -38,19 +40,18 @@ class _CartItemCardWidgetState extends State<CartItemCardWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          widget.item.skuEntity.skuName,
-                          style: TextStyle(fontSize: AppTheme.fontSize18(context), fontWeight: AppTheme.fontWeight700),
-                        ),
-                        Text(
-                          "${widget.item.skuEntity.skuPrice} \$",
-                          style: TextStyle(
-                              fontSize: AppTheme.fontSize18(context), fontWeight: AppTheme.fontWeight700, color: AppTheme.primaryGreenColor),
-                        ),
-                      ],
+                    Container(
+                      child: Text(
+                        widget.item.skuEntity.skuName,
+                        style: TextStyle(fontSize: AppTheme.fontSize18(context), fontWeight: AppTheme.fontWeight700),
+                      ),
+                    ),
+                    Container(
+                      child: Text(
+                        "${widget.item.skuEntity.skuPrice} \$",
+                        style: TextStyle(
+                            fontSize: AppTheme.fontSize18(context), fontWeight: AppTheme.fontWeight700, color: AppTheme.primaryGreenColor),
+                      ),
                     ),
                     SizedBox(
                       height: context.screenHeight * 0.01,

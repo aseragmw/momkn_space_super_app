@@ -12,6 +12,8 @@ import 'package:super_app/modules/Ordering_Notifications/features/products/prese
 import 'package:super_app/modules/Ordering_Notifications/features/products/presentation/screens/skuDetailsScreen.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/presentation/widgets/catalog_category_card.dart';
 
+import 'catalogs_screen.dart';
+
 class SKUsScreen extends StatelessWidget {
   const SKUsScreen({super.key, required this.brand});
   final BrandEntity brand;
@@ -57,14 +59,34 @@ class SKUsScreen extends StatelessWidget {
                   itemCount: state.skus.length,
                   itemBuilder: (context, index) {
                     final sku = state.skus[index];
-                    return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => SKUDetailsScreen(SKU: sku)));
-                        },
-                        child: CatalogCategoryCardWidget(
-                            title: sku.skuName, imgUrl: "assets/product2.png"));
-                  },
+                    return FutureBuilder(future:getPicBytes(sku), builder: (context,snapshot){
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CustomCircularProgressIndicator(color: AppTheme.primaryGreenColor,),
+                        );
+                      }  else if(snapshot.connectionState == ConnectionState.done){
+                        if(snapshot.hasData){
+                          print("genaa ${sku.skuID}");
+
+                          return InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) => SKUDetailsScreen(SKU: sku,imgBytes: snapshot.data!,)));
+                              },
+                              child: CatalogCategoryCardWidget(
+                                  title: sku.skuName, imgUrl: "assets/product2.png", imgBytes: snapshot.data!,));
+
+                        }
+                        else {
+                          return SizedBox();
+                        }
+                      }
+                      else{
+                        return SizedBox();
+                      }
+                    });
+                     },
                 );
               }
               return SizedBox();

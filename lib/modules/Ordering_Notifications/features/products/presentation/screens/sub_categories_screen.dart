@@ -7,6 +7,9 @@ import 'package:super_app/modules/Ordering_Notifications/features/products/domai
 import 'package:super_app/modules/Ordering_Notifications/features/products/presentation/screens/brands_screen.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/products/presentation/widgets/catalog_category_card.dart';
 
+import '../../../../core/widgets/custom_circular_progress_indicator.dart';
+import 'catalogs_screen.dart';
+
 class SubCategoriesScreen extends StatelessWidget {
   const SubCategoriesScreen({super.key, required this.category});
   final CategoryEntity category;
@@ -41,10 +44,29 @@ class SubCategoriesScreen extends StatelessWidget {
           itemCount: category.subCategories.length,
           itemBuilder: (context, index) {
             final subCategory = category.subCategories[index];
-            return InkWell(onTap:(){
-              Navigator.of(context).push(MaterialPageRoute(builder: (_)=>BrandsScreen(subCategoryEntity: subCategory)));
-            },child: CatalogCategoryCardWidget(title: subCategory.subCategoryName, imgUrl: "assets/product2.png"));
-          },
+            return FutureBuilder(future:getPicBytes(subCategory), builder: (context,snapshot){
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CustomCircularProgressIndicator(color: AppTheme.primaryGreenColor,),
+                );
+              }  else if(snapshot.connectionState == ConnectionState.done){
+                if(snapshot.hasData){
+                  print("genaa");
+                  return InkWell(onTap:(){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_)=>BrandsScreen(subCategoryEntity: subCategory)));
+                  },child: CatalogCategoryCardWidget(title: subCategory.subCategoryName, imgUrl: "assets/product2.png", imgBytes: snapshot.data!,));
+
+                }
+                else {
+                  return SizedBox();
+                }
+              }
+              else{
+                return SizedBox();
+              }
+            });
+           },
         )
         // GridView(
         //   physics: NeverScrollableScrollPhysics(),
