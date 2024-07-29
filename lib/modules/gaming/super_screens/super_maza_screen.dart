@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_size.dart';
+import '../../Ordering_Notifications/core/utils/app_theme.dart';
+
 import 'package:super_app/modules/gaming/super_consts/strings.dart';
 
-import '../../Ordering_Notifications/core/utils/app_theme.dart';
+import '../gaming_cache_helper.dart';
 
 class SuperMazaScreen extends StatefulWidget {
   const SuperMazaScreen({
@@ -33,6 +35,7 @@ class _SuperMazaScreenState extends State<SuperMazaScreen> {
   @override
   void initState() {
     super.initState();
+    _checkLastVisit();
     _clueTimerController = ClueTimerController();
     _fetchQuestionData();
     _fetchPossibleAnswers();
@@ -40,26 +43,31 @@ class _SuperMazaScreenState extends State<SuperMazaScreen> {
 
   Future<void> _fetchQuestionData() async {
     try {
-      final snapshot =
-          await FirebaseFirestore.instance.collection('GPMaza').get();
+      final snapshot = await FirebaseFirestore.instance.collection('GPMaza').get();
       final data = snapshot.docs.first.data();
-      setState(() {
-        question = data['q'];
-        answers = List<String>.from(data['answer']);
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          question = data['q'];
+          answers = List<String>.from(data['answer']);
+          isLoading = false;
+        });
+      }
     } on FirebaseException catch (e) {
       log("Firebase error: $e");
-      setState(() {
-        errorMessage = "Failed to fetch data: ${e.message}";
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "Failed to fetch data: ${e.message}";
+          isLoading = false;
+        });
+      }
     } catch (e) {
       log("Error: $e");
-      setState(() {
-        errorMessage = "An unexpected error occurred.";
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "An unexpected error occurred.";
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -71,34 +79,44 @@ class _SuperMazaScreenState extends State<SuperMazaScreen> {
           .get();
       if (docSnapshot.exists) {
         final data = docSnapshot.data()!;
-        setState(() {
-          possibleAnswers = List<String>.from(data['answers']);
-        });
+        if (mounted) {
+          setState(() {
+            possibleAnswers = List<String>.from(data['answers']);
+            possibleAnswers.addAll(SuperStringsClass.appAnswers);
+          });
+        }
       } else {
-        setState(() {
-          errorMessage = "Answers document does not exist.";
-        });
+        if (mounted) {
+          setState(() {
+            errorMessage = "Answers document does not exist.";
+          });
+        }
       }
     } on FirebaseException catch (e) {
       log("Firebase error: $e");
-      setState(() {
-        errorMessage = "Failed to fetch answers: ${e.message}";
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "Failed to fetch answers: ${e.message}";
+        });
+      }
     } catch (e) {
       log("Error: $e");
-      setState(() {
-        errorMessage = "An unexpected error occurred.";
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "An unexpected error occurred.";
+        });
+      }
     }
   }
 
   void _filterAnswers(String query) {
-    setState(() {
-      filteredAnswers = possibleAnswers
-          .where(
-              (answer) => answer.toLowerCase().startsWith(query.toLowerCase()))
-          .toList();
-    });
+    if (mounted) {
+      setState(() {
+        filteredAnswers = possibleAnswers
+            .where((answer) => answer.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      });
+    }
   }
 
   void _submitAnswer(String userAnswer) {
@@ -116,18 +134,26 @@ class _SuperMazaScreenState extends State<SuperMazaScreen> {
           .map((answer) => answer.trim().toLowerCase())
           .contains(formattedAnswer)) {
         Fluttertoast.showToast(msg: 'This answer has already been given.');
-        setState(() {
-          wrongAttempts++;
-        });
+        if (mounted) {
+          setState(() {
+            wrongAttempts++;
+          });
+        }
         if (wrongAttempts >= 3) {
           _navigateToAnotherScreen();
         }
       } else {
-        setState(() {
-          correctAnswers.add(userAnswer.trim().toLowerCase());
-        });
+        if (mounted) {
+          setState(() {
+            correctAnswers.add(userAnswer.trim().toLowerCase());
+          });
+        }
+
+        int lastScore = GamingCacheHelper.getData(key: "lastScore") ?? 0;
+        int currentScore = lastScore + 1;
+        GamingCacheHelper.saveData(key: "lastScore", value: currentScore);
         Fluttertoast.showToast(
-            msg: "Excellent!",
+            msg: "Excellent! you got 1 points",
             toastLength: Toast.LENGTH_SHORT,
             textColor: Colors.green,
             gravity: ToastGravity.TOP);
@@ -139,17 +165,21 @@ class _SuperMazaScreenState extends State<SuperMazaScreen> {
           textColor: Colors.green,
           gravity: ToastGravity.TOP);
 
-      setState(() {
-        wrongAttempts++;
-      });
+      if (mounted) {
+        setState(() {
+          wrongAttempts++;
+        });
+      }
       if (wrongAttempts >= 3) {
         _navigateToAnotherScreen();
       }
     }
     _textController.clear();
-    setState(() {
-      filteredAnswers = [];
-    });
+    if (mounted) {
+      setState(() {
+        filteredAnswers = [];
+      });
+    }
   }
 
   void _skipQuestion() async {
@@ -160,8 +190,43 @@ class _SuperMazaScreenState extends State<SuperMazaScreen> {
     Navigator.pop(context);
   }
 
+  Timer? _checkLastVisitTimer;
+
+  @override
+  void dispose() {
+    _storeLastVisitTimestamp();
+    _checkLastVisitTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _storeLastVisitTimestamp() async {
+    final currentTime = DateTime.now().millisecondsSinceEpoch;
+    await GamingCacheHelper.saveData(key: "lastVisitTimestampToMaza", value: currentTime);
+  }
+
+  Future<void> _checkLastVisit() async {
+    _checkLastVisitTimer = Timer(Duration.zero, () async {
+      final lastVisit = GamingCacheHelper.getData(key: "lastVisitTimestampToMaza") ?? 0;
+      final currentTime = DateTime.now().millisecondsSinceEpoch;
+
+      if (currentTime - lastVisit < 12 * 60 * 60 * 1000) {
+        if (mounted) {
+          Fluttertoast.showToast(
+            msg: "You can only access this screen once every 12 hours.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+          );
+          Navigator.of(context).pop();
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    int userScore = GamingCacheHelper.getData(key: "lastScore") ?? 0;
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppTheme.screenBackgroundColor,
@@ -226,6 +291,10 @@ class _SuperMazaScreenState extends State<SuperMazaScreen> {
                               )
                             ]),
                           ),
+                          Text("Your score is $userScore", style:  TextStyle(
+                              color: AppTheme.orangeColor,
+                              fontWeight: FontWeight.w800,fontSize: AppTheme.fontSize18(context)),),
+                          const SizedBox(height: 10),
 
                           const SizedBox(height: 10),
                           wrongAttempts == 0

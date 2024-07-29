@@ -9,6 +9,8 @@ import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_
 import 'package:super_app/modules/Ordering_Notifications/core/utils/app_theme.dart';
 import 'package:super_app/modules/gaming/super_consts/strings.dart';
 
+import '../gaming_cache_helper.dart';
+
 class SuperPlayerCluesScreen extends StatefulWidget {
   const SuperPlayerCluesScreen({super.key});
 
@@ -27,13 +29,47 @@ class _SuperPlayerCluesScreenState extends State<SuperPlayerCluesScreen> {
   List<String> possibleAnswers = [];
   List<String> filteredAnswers = [];
   final TextEditingController _answerController = TextEditingController();
+  Timer? _checkLastVisitTimer;
 
   @override
   void initState() {
     super.initState();
+    _checkLastVisit(); // newCode
     _clueTimerController = ClueTimerController();
     _fetchClues();
     _fetchAnswers();
+  }
+
+
+  @override
+  void dispose() { // newCode
+    _storeLastVisitTimestamp();
+    _checkLastVisitTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _storeLastVisitTimestamp() async {  // newCode
+    final currentTime = DateTime.now().millisecondsSinceEpoch;
+    await GamingCacheHelper.saveData(key: "lastVisitTimestampToClues", value: currentTime);
+  }
+  Future<void> _checkLastVisit() async {  // newCode
+    _checkLastVisitTimer = Timer(Duration.zero, () async {
+      final lastVisit = GamingCacheHelper.getData(key: "lastVisitTimestampToClues") ?? 0;
+      final currentTime = DateTime.now().millisecondsSinceEpoch;
+
+      if (currentTime - lastVisit < 12 * 60 * 60 * 1000) {
+        if (mounted) {
+          Fluttertoast.showToast(
+            msg: "You can only access this screen once every 12 hours.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+          );
+          Navigator.of(context).pop();
+        }
+      }
+    });
   }
 
   Future<void> _fetchClues() async {
@@ -44,35 +80,43 @@ class _SuperPlayerCluesScreenState extends State<SuperPlayerCluesScreen> {
           .get();
       if (docSnapshot.exists) {
         final data = docSnapshot.data()!;
-        setState(() {
-          clues = [
-            data['clue1'],
-            data['clue2'],
-            data['clue3'],
-            data['clue4'],
-            data['clue5']
-          ];
-          answer = data['answer'];
-          isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            clues = [
+              data['clue1'],
+              data['clue2'],
+              data['clue3'],
+              data['clue4'],
+              data['clue5']
+            ];
+            answer = data['answer'];
+            isLoading = false;
+          });
+        }
       } else {
-        setState(() {
-          errorMessage = "Document does not exist.";
-          isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            errorMessage = "Document does not exist.";
+            isLoading = false;
+          });
+        }
       }
     } on FirebaseException catch (e) {
       log("Firebase error: $e");
-      setState(() {
-        errorMessage = "Failed to fetch clues: ${e.message}";
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "Failed to fetch clues: ${e.message}";
+          isLoading = false;
+        });
+      }
     } catch (e) {
       log("Error: $e");
-      setState(() {
-        errorMessage = "An unexpected error occurred.";
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "An unexpected error occurred.";
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -87,28 +131,41 @@ class _SuperPlayerCluesScreenState extends State<SuperPlayerCluesScreen> {
           .get();
       if (docSnapshot.exists) {
         final data = docSnapshot.data()!;
-        setState(() {
-          possibleAnswers = List<String>.from(data['answers']);
-        });
+        if (mounted) {
+          setState(() {
+            possibleAnswers = List<String>.from(data['answers']);
+            // newCode
+            possibleAnswers.addAll(SuperStringsClass.appAnswers);
+            // newCode
+          });
+        }
       } else {
-        setState(() {
-          errorMessage = "Answers document does not exist.";
-        });
+        if (mounted) {
+          setState(() {
+            errorMessage = "Answers document does not exist.";
+          });
+        }
       }
     } on FirebaseException catch (e) {
       log("Firebase error: $e");
-      setState(() {
-        errorMessage = "Failed to fetch answers: ${e.message}";
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "Failed to fetch answers: ${e.message}";
+        });
+      }
     } catch (e) {
       log("Error: $e");
-      setState(() {
-        errorMessage = "An unexpected error occurred.";
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "An unexpected error occurred.";
+        });
+      }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -129,6 +186,7 @@ class _SuperPlayerCluesScreenState extends State<SuperPlayerCluesScreen> {
   }
 
   void _navigateToTypeHandlingScreen() {
+    _calcScore();  // newCode
     Navigator.of(context).pop();
   }
 
@@ -136,14 +194,18 @@ class _SuperPlayerCluesScreenState extends State<SuperPlayerCluesScreen> {
     setState(() {
       _answerController.text = userAnswer;
     });
-    _calcScore();
   }
 
-  void _calcScore() {
+  void _calcScore() async {
     if (_answerController.text.trim().toLowerCase() ==
         answer.trim().toLowerCase()) {
+      // newCode
+      int lastScore = GamingCacheHelper.getData(key: "lastScore") ?? 0;
+      int currentScore = lastScore + 3;
+      await GamingCacheHelper.saveData(key: "lastScore", value: currentScore);
+      // newCode
       Fluttertoast.showToast(
-          msg: "Excellent!",
+          msg: "Excellent! you got 3 points",
           toastLength: Toast.LENGTH_SHORT,
           textColor: Colors.green,
           gravity: ToastGravity.TOP);
@@ -158,7 +220,6 @@ class _SuperPlayerCluesScreenState extends State<SuperPlayerCluesScreen> {
 
   void _skipQuestion() {
     _submitAnswer(_answerController.text);
-    _calcScore();
     _navigateToTypeHandlingScreen();
   }
 
@@ -169,14 +230,18 @@ class _SuperPlayerCluesScreenState extends State<SuperPlayerCluesScreen> {
       } else {
         filteredAnswers = possibleAnswers
             .where((answer) =>
-                answer.toLowerCase().startsWith(input.trim().toLowerCase()))
+            answer.toLowerCase().contains(input.trim().toLowerCase())) // newCode
             .toList();
       }
     });
   }
 
+
+
+
   @override
   Widget build(BuildContext context) {
+    int userScore = GamingCacheHelper.getData(key: "lastScore") ?? 0;
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppTheme.screenBackgroundColor,
@@ -237,6 +302,10 @@ class _SuperPlayerCluesScreenState extends State<SuperPlayerCluesScreen> {
                               )
                             ]),
                           ),
+                          Text("Your score is $userScore",style:  TextStyle(
+                              color: AppTheme.orangeColor,
+                              fontWeight: FontWeight.w800,fontSize: AppTheme.fontSize18(context)),),
+                          const SizedBox(height: 10),
 
                           ClueTimer(
                             onTimeUp: () {

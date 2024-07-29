@@ -8,6 +8,8 @@ import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_
 import 'package:super_app/modules/Ordering_Notifications/core/utils/app_theme.dart';
 import 'package:super_app/modules/gaming/super_consts/strings.dart';
 
+import '../gaming_cache_helper.dart';
+
 class SuperPlayerClubsScreen extends StatefulWidget {
   const SuperPlayerClubsScreen({
     super.key,
@@ -31,9 +33,47 @@ class _SuperPlayerClubsScreenState extends State<SuperPlayerClubsScreen> {
   @override
   void initState() {
     super.initState();
+    _checkLastVisit();
     _clueTimerController = ClueTimerController();
     _fetchClubs();
     _fetchAnswers();
+  }
+
+  Timer? _checkLastVisitTimer;
+
+  @override
+  void dispose() {
+    _storeLastVisitTimestamp();
+    _checkLastVisitTimer?.cancel();
+    _answerController.dispose(); // Dispose of the controller
+    super.dispose();
+  }
+
+  Future<void> _storeLastVisitTimestamp() async {
+    final currentTime = DateTime.now().millisecondsSinceEpoch;
+    await GamingCacheHelper.saveData(
+        key: "lastVisitTimestampToClubs", value: currentTime);
+  }
+
+  Future<void> _checkLastVisit() async {
+    _checkLastVisitTimer = Timer(Duration.zero, () async {
+      final lastVisit =
+          GamingCacheHelper.getData(key: "lastVisitTimestampToClubs") ?? 0;
+      final currentTime = DateTime.now().millisecondsSinceEpoch;
+
+      if (currentTime - lastVisit < 12 * 60 * 60 * 1000) {
+        if (mounted) {
+          Fluttertoast.showToast(
+            msg: "You can only access this screen once every 12 hours.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+          );
+          Navigator.of(context).pop();
+        }
+      }
+    });
   }
 
   Future<void> _fetchClubs() async {
@@ -44,29 +84,37 @@ class _SuperPlayerClubsScreenState extends State<SuperPlayerClubsScreen> {
           .get();
       if (docSnapshot.exists) {
         final data = docSnapshot.data()!;
-        setState(() {
-          clubs = List<String>.from(data['clubs']);
-          answer = data['answer'];
-          isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            clubs = List<String>.from(data['clubs']);
+            answer = data['answer'];
+            isLoading = false;
+          });
+        }
       } else {
-        setState(() {
-          errorMessage = "Document does not exist.";
-          isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            errorMessage = "Document does not exist.";
+            isLoading = false;
+          });
+        }
       }
     } on FirebaseException catch (e) {
       log("Firebase error: $e");
-      setState(() {
-        errorMessage = "Failed to fetch clubs: ${e.message}";
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "Failed to fetch clubs: ${e.message}";
+          isLoading = false;
+        });
+      }
     } catch (e) {
       log("Error: $e");
-      setState(() {
-        errorMessage = "An unexpected error occurred.";
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "An unexpected error occurred.";
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -78,28 +126,38 @@ class _SuperPlayerClubsScreenState extends State<SuperPlayerClubsScreen> {
           .get();
       if (docSnapshot.exists) {
         final data = docSnapshot.data()!;
-        setState(() {
-          possibleAnswers = List<String>.from(data['answers']);
-        });
+        if (mounted) {
+          setState(() {
+            possibleAnswers = List<String>.from(data['answers']);
+            possibleAnswers.addAll(SuperStringsClass.appAnswers);
+          });
+        }
       } else {
-        setState(() {
-          errorMessage = "Answers document does not exist.";
-        });
+        if (mounted) {
+          setState(() {
+            errorMessage = "Answers document does not exist.";
+          });
+        }
       }
     } on FirebaseException catch (e) {
       log("Firebase error: $e");
-      setState(() {
-        errorMessage = "Failed to fetch answers: ${e.message}";
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "Failed to fetch answers: ${e.message}";
+        });
+      }
     } catch (e) {
       log("Error: $e");
-      setState(() {
-        errorMessage = "An unexpected error occurred.";
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "An unexpected error occurred.";
+        });
+      }
     }
   }
 
   void _navigateToAnotherScreen() {
+    _calcScore();
     Navigator.of(context).pop();
   }
 
@@ -107,14 +165,16 @@ class _SuperPlayerClubsScreenState extends State<SuperPlayerClubsScreen> {
     setState(() {
       _answerController.text = userAnswer;
     });
-    _calcScore();
   }
 
-  void _calcScore() {
+  void _calcScore() async {
     if (_answerController.text.trim().toLowerCase() ==
         answer.trim().toLowerCase()) {
+      int lastScore = GamingCacheHelper.getData(key: "lastScore") ?? 0;
+      int currentScore = lastScore + 2;
+      await GamingCacheHelper.saveData(key: "lastScore", value: currentScore);
       Fluttertoast.showToast(
-          msg: "Excellent!",
+          msg: "Excellent! you got 2 points",
           toastLength: Toast.LENGTH_SHORT,
           textColor: Colors.green,
           gravity: ToastGravity.TOP);
@@ -129,21 +189,24 @@ class _SuperPlayerClubsScreenState extends State<SuperPlayerClubsScreen> {
 
   void _skipQuestion() {
     _submitAnswer(_answerController.text);
-    _calcScore();
     _navigateToAnotherScreen();
   }
 
   void _filterAnswers(String input) {
-    setState(() {
-      filteredAnswers = possibleAnswers
-          .where((answer) =>
-              answer.toLowerCase().startsWith(input.trim().toLowerCase()))
-          .toList();
-    });
+    if (mounted) {
+      setState(() {
+        filteredAnswers = possibleAnswers
+            .where((answer) =>
+                answer.toLowerCase().contains(input.trim().toLowerCase()))
+            .toList();
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    int userScore = GamingCacheHelper.getData(key: "lastScore") ?? 0;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppTheme.screenBackgroundColor,
@@ -190,31 +253,43 @@ class _SuperPlayerClubsScreenState extends State<SuperPlayerClubsScreen> {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
-                              padding:  EdgeInsets.only(left: context.screenAspectRatio*10),
+                              padding: EdgeInsets.only(
+                                  left: context.screenAspectRatio * 10),
                               child: InkWell(
                                 onTap: () {
                                   Navigator.of(context).pop();
                                 },
-                                child: Icon(Icons.arrow_back_ios_new,color: AppTheme.whiteColor,size: context.screenAspectRatio*16,),
+                                child: Icon(
+                                  Icons.arrow_back_ios_new,
+                                  color: AppTheme.whiteColor,
+                                  size: context.screenAspectRatio * 16,
+                                ),
                               ),
                             ),
                           )
                         ]),
                       ),
-
+                      Text(
+                        "Your score is $userScore",
+                        style: TextStyle(
+                            color: AppTheme.orangeColor,
+                            fontWeight: FontWeight.w800,
+                            fontSize: AppTheme.fontSize18(context)),
+                      ),
+                      const SizedBox(height: 10),
                       ClueTimer(
                         onTimeUp: _skipQuestion,
                         controller: _clueTimerController,
                       ),
                       const SizedBox(height: 20),
                       Container(
-                        margin: EdgeInsets.symmetric(horizontal: context.screenAspectRatio*15),
+                        margin: EdgeInsets.symmetric(
+                            horizontal: context.screenAspectRatio * 15),
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: _skipQuestion,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-AppTheme.orangeColor                          ),
+                              backgroundColor: AppTheme.orangeColor),
                           child: const Text(
                             "Skip question",
                             style: TextStyle(
@@ -227,11 +302,14 @@ AppTheme.orangeColor                          ),
                       const SizedBox(height: 20),
                       Text(
                         "your answer is: \t ${_answerController.text}",
-                        style:  TextStyle(color: AppTheme.primaryGreenColor,fontSize: AppTheme.fontSize18(context)),
+                        style: TextStyle(
+                            color: AppTheme.primaryGreenColor,
+                            fontSize: AppTheme.fontSize18(context)),
                       ),
                       const SizedBox(height: 10),
                       Padding(
-                        padding:  EdgeInsets.symmetric(horizontal: context.screenAspectRatio*5),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: context.screenAspectRatio * 5),
                         child: TextField(
                           controller: _answerController,
                           decoration: const InputDecoration(
@@ -255,7 +333,7 @@ AppTheme.orangeColor                          ),
                       filteredAnswers.isEmpty
                           ? const SizedBox()
                           : SizedBox(
-                              height: 170,
+                              height: 50,
                               child: SingleChildScrollView(
                                 child: Wrap(
                                   children: filteredAnswers.map((answer) {
@@ -295,23 +373,30 @@ AppTheme.orangeColor                          ),
                               return Column(
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.symmetric(horizontal: context.screenAspectRatio*15,vertical: context.screenAspectRatio*5),
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal:
+                                            context.screenAspectRatio * 15,
+                                        vertical:
+                                            context.screenAspectRatio * 5),
                                     width: double.infinity,
-                                    padding:  EdgeInsets.symmetric(
-                                        vertical: context.screenAspectRatio*8),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical:
+                                            context.screenAspectRatio * 8),
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                       borderRadius: AppTheme.boxRadius,
                                       border: Border.all(
-                                          color: AppTheme.primaryGreenColor, width: 2),
+                                          color: AppTheme.primaryGreenColor,
+                                          width: 2),
                                     ),
                                     child: Text(
                                       clubs[index],
-                                      style:  TextStyle(
+                                      style: TextStyle(
                                         color: AppTheme.primaryGreenColor,
                                         fontSize: AppTheme.fontSize16(context),
                                         fontWeight: FontWeight.w700,
-                                      ),textAlign: TextAlign.center,
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                   if (index < clubs.length - 1)
@@ -388,7 +473,7 @@ class _ClueTimerState extends State<ClueTimer> {
     final seconds = (_timeRemaining % 60).toString().padLeft(2, '0');
     return Text(
       "Time remaining: $minutes:$seconds",
-      style:  TextStyle(color: AppTheme.primaryGreenColor),
+      style: TextStyle(color: AppTheme.primaryGreenColor),
     );
   }
 }

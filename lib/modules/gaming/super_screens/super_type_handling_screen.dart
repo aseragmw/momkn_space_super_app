@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_size.dart';
 import 'package:super_app/modules/Ordering_Notifications/core/utils/app_theme.dart';
+import 'package:super_app/modules/gaming/gaming_cache_helper.dart';
 import 'package:super_app/modules/gaming/super_screens/loading_screen.dart';
 import 'package:super_app/modules/gaming/super_screens/super_maza_screen.dart';
 import 'package:super_app/modules/gaming/super_screens/super_photo_players_screen.dart';
@@ -21,7 +22,6 @@ class SuperTypeHandlingScreen extends StatefulWidget {
 
 class _SuperTypeHandlingScreenState extends State<SuperTypeHandlingScreen> {
   bool isLoading = true;
-
   bool showClues = false;
   bool showMazyra = false;
   bool showMaza = false;
@@ -34,6 +34,7 @@ class _SuperTypeHandlingScreenState extends State<SuperTypeHandlingScreen> {
   void initState() {
     super.initState();
     _checkForNewVersion();
+    _getUserScore();
   }
 
   Future<void> _checkForNewVersion() async {
@@ -76,143 +77,161 @@ class _SuperTypeHandlingScreenState extends State<SuperTypeHandlingScreen> {
       });
     }
   }
+  int userScore = 0;
+  void _getUserScore() {
+    setState(() {
+      userScore = GamingCacheHelper.getData(key: "lastScore") ?? 0;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: LoadingScreen(
-        isLoading: isLoading,
-        child: Scaffold(
-          backgroundColor: AppTheme.screenBackgroundColor,
-          body: isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(
-                  color: AppTheme.primaryGreenColor,
-                ))
-              : errMsg.isEmpty
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.21,
-                          decoration: const BoxDecoration(
-                              color: AppTheme.transparentColor),
-                          child: Stack(children: [
-                            Container(
-                              decoration: const BoxDecoration(
-                                  color: Color(0xFF0A271D),
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(40),
-                                      bottomRight: Radius.circular(40))),
-                              height: context.screenHeight * 0.2,
-                              child: Stack(
-                                children: [
-                                  SvgPicture.asset(
-                                    "assets/ahly_momkn_bg_home.svg",
-                                    width: context.screenWidth,
-                                    fit: BoxFit.fill,
-                                  ),
-                                  Align(
-                                    child: Image.asset(
-                                      "assets/logo.png",
-                                      height: context.screenAspectRatio * 50,
+    return WillPopScope(
+      onWillPop: () async {
+        _getUserScore();
+        return true;
+      },
+      child: SafeArea(
+        child: LoadingScreen(
+          isLoading: isLoading,
+          child: Scaffold(
+            backgroundColor: AppTheme.screenBackgroundColor,
+            body: isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(
+                    color: AppTheme.primaryGreenColor,
+                  ))
+                : errMsg.isEmpty
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.21,
+                            decoration: const BoxDecoration(
+                                color: AppTheme.transparentColor),
+                            child: Stack(children: [
+                              Container(
+                                decoration: const BoxDecoration(
+                                    color: Color(0xFF0A271D),
+                                    borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(40),
+                                        bottomRight: Radius.circular(40))),
+                                height: context.screenHeight * 0.2,
+                                child: Stack(
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/ahly_momkn_bg_home.svg",
+                                      width: context.screenWidth,
                                       fit: BoxFit.fill,
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding:  EdgeInsets.only(left: context.screenAspectRatio*10),
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Icon(Icons.arrow_back_ios_new,color: AppTheme.whiteColor,size: context.screenAspectRatio*16,),
+                                    Align(
+                                      child: Image.asset(
+                                        "assets/logo.png",
+                                        height: context.screenAspectRatio * 50,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            )
-                          ]),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding:  EdgeInsets.only(left: context.screenAspectRatio*10),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Icon(Icons.arrow_back_ios_new,color: AppTheme.whiteColor,size: context.screenAspectRatio*16,),
+                                  ),
+                                ),
+                              )
+                            ]),
+                          ),
+                          Text(
+                            "Your score is $userScore",
+                            style:  TextStyle(
+                                color: AppTheme.orangeColor,
+                                fontWeight: FontWeight.w800,fontSize: AppTheme.fontSize18(context)),
+                          ),
+      
+                          // Container(
+                          //   decoration: BoxDecoration(
+                          //       borderRadius: AppTheme.boxRadius,
+                          //       border: Border.all(color: AppTheme.orangeColor)),
+                          //   padding: EdgeInsets.symmetric(horizontal: context.screenAspectRatio*15,vertical: context.screenAspectRatio*10),
+                          //   child: Text("Our Community Games",style: TextStyle(fontSize: AppTheme.fontSize18(context),color: AppTheme.orangeColor),),
+                          // ),
+                          // SizedBox(
+                          //   height: context.screenAspectRatio * 10,
+                          // ),
+                          if (showClues)
+                            CustomButton(
+                                fun: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SuperPlayerCluesScreen(),
+                                      )).then((value) => _getUserScore());
+                                },
+                                txt: "من اللاعب؟"),
+                          if (showMaza)
+                            CustomButton(
+                                fun: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SuperMazaScreen(),
+                                      )).then((value) => _getUserScore());
+                                },
+                                txt: "ماذا تعرف؟"),
+                          if (showPhoto)
+                            CustomButton(
+                                fun: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SuperPhotoPlayersScreen(),
+                                      )).then((value) => _getUserScore());
+                                },
+                                txt: "مين فى الصورة؟"),
+                          if (showMazyra)
+                            CustomButton(
+                                fun: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SuperPlayerClubsScreen(),
+                                      )).then((value) => _getUserScore());
+                                },
+                                txt: "مسيرة لاعبين"),
+                          if (showRandom)
+                            CustomButton(
+                                fun: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SuperRandomQuestionsScreen(),
+                                      )).then((value) => _getUserScore());
+                                },
+                                txt: "اسئلة عشوائية"),
+                        ],
+                      )
+                    : Center(
+                        child: Text(
+                          errMsg,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
                         ),
-
-                        // Container(
-                        //   decoration: BoxDecoration(
-                        //       borderRadius: AppTheme.boxRadius,
-                        //       border: Border.all(color: AppTheme.orangeColor)),
-                        //   padding: EdgeInsets.symmetric(horizontal: context.screenAspectRatio*15,vertical: context.screenAspectRatio*10),
-                        //   child: Text("Our Community Games",style: TextStyle(fontSize: AppTheme.fontSize18(context),color: AppTheme.orangeColor),),
-                        // ),
-                        // SizedBox(
-                        //   height: context.screenAspectRatio * 10,
-                        // ),
-                        if (showClues)
-                          CustomButton(
-                              fun: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SuperPlayerCluesScreen(),
-                                    ));
-                              },
-                              txt: "من اللاعب؟"),
-                        if (showMaza)
-                          CustomButton(
-                              fun: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SuperMazaScreen(),
-                                    ));
-                              },
-                              txt: "ماذا تعرف؟"),
-                        if (showPhoto)
-                          CustomButton(
-                              fun: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SuperPhotoPlayersScreen(),
-                                    ));
-                              },
-                              txt: "مين فى الصورة؟"),
-                        if (showMazyra)
-                          CustomButton(
-                              fun: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SuperPlayerClubsScreen(),
-                                    ));
-                              },
-                              txt: "مسيرة لاعبين"),
-                        if (showRandom)
-                          CustomButton(
-                              fun: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SuperRandomQuestionsScreen(),
-                                    ));
-                              },
-                              txt: "اسئلة عشوائية"),
-                      ],
-                    )
-                  : Center(
-                      child: Text(
-                        errMsg,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold),
                       ),
-                    ),
+          ),
         ),
       ),
     );

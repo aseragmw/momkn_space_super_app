@@ -8,6 +8,8 @@ import 'package:super_app/modules/Ordering_Notifications/core/extentions/screen_
 import 'package:super_app/modules/Ordering_Notifications/core/utils/app_theme.dart';
 import 'package:super_app/modules/gaming/super_consts/strings.dart';
 
+import '../gaming_cache_helper.dart';
+
 class SuperRandomQuestionsScreen extends StatefulWidget {
   const SuperRandomQuestionsScreen({
     super.key,
@@ -32,12 +34,13 @@ class _SuperRandomQuestionsScreenState
   late ClueTimerController _clueTimerController;
   final List<TextEditingController> _answerControllers = List.generate(
     6,
-    (_) => TextEditingController(),
+        (_) => TextEditingController(),
   );
 
   @override
   void initState() {
     super.initState();
+    _checkLastVisit();
     _clueTimerController = ClueTimerController();
     _fetchData();
     _fetchPossibleAnswers();
@@ -51,31 +54,39 @@ class _SuperRandomQuestionsScreenState
           .get();
       if (docSnapshot.exists) {
         final data = docSnapshot.data()!;
-        setState(() {
-          for (int i = 0; i < 6; i++) {
-            questions[i] = data['q${i + 1}'];
-            answers[i] = data['a${i + 1}'];
-          }
-          isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            for (int i = 0; i < 6; i++) {
+              questions[i] = data['q${i + 1}'];
+              answers[i] = data['a${i + 1}'];
+            }
+            isLoading = false;
+          });
+        }
       } else {
-        setState(() {
-          errorMessage = "Document does not exist.";
-          isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            errorMessage = "Document does not exist.";
+            isLoading = false;
+          });
+        }
       }
     } on FirebaseException catch (e) {
       log("Firebase error: $e");
-      setState(() {
-        errorMessage = "Failed to fetch data: ${e.message}";
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "Failed to fetch data: ${e.message}";
+          isLoading = false;
+        });
+      }
     } catch (e) {
       log("Error: $e");
-      setState(() {
-        errorMessage = "An unexpected error occurred.";
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "An unexpected error occurred.";
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -87,24 +98,35 @@ class _SuperRandomQuestionsScreenState
           .get();
       if (docSnapshot.exists) {
         final data = docSnapshot.data()!;
-        setState(() {
-          possibleAnswers = List<String>.from(data['answers']);
-        });
+        if (mounted) {
+          setState(() {
+            possibleAnswers = List<String>.from(data['answers']);
+            // newCode
+            possibleAnswers.addAll(SuperStringsClass.appAnswers);
+            // newCode
+          });
+        }
       } else {
-        setState(() {
-          errorMessage = "Answers document does not exist.";
-        });
+        if (mounted) {
+          setState(() {
+            errorMessage = "Answers document does not exist.";
+          });
+        }
       }
     } on FirebaseException catch (e) {
       log("Firebase error: $e");
-      setState(() {
-        errorMessage = "Failed to fetch answers: ${e.message}";
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "Failed to fetch answers: ${e.message}";
+        });
+      }
     } catch (e) {
       log("Error: $e");
-      setState(() {
-        errorMessage = "An unexpected error occurred.";
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "An unexpected error occurred.";
+        });
+      }
     }
   }
 
@@ -120,6 +142,11 @@ class _SuperRandomQuestionsScreenState
       if (_checkAnswer(answers[questionIndex], userAnswer)) {
         if (!answeredCorrectly[questionIndex]) {
           answeredCorrectly[questionIndex] = true;
+          // newCode
+          int lastScore = GamingCacheHelper.getData(key: "lastScore") ?? 0;
+          int currentScore = lastScore + 1;
+          GamingCacheHelper.saveData(key: "lastScore", value: currentScore);
+          // newCode
           Fluttertoast.showToast(
               msg: "Excellent!",
               toastLength: Toast.LENGTH_SHORT,
@@ -129,6 +156,11 @@ class _SuperRandomQuestionsScreenState
       } else {
         if (answeredCorrectly[questionIndex]) {
           answeredCorrectly[questionIndex] = false;
+          // newCode
+          int lastScore = GamingCacheHelper.getData(key: "lastScore") ?? 0;
+          int currentScore = lastScore - 1;
+          GamingCacheHelper.saveData(key: "lastScore", value: currentScore);
+          // newCode
         }
         Fluttertoast.showToast(
             msg: "Wrong answer try again!",
@@ -149,28 +181,70 @@ class _SuperRandomQuestionsScreenState
   }
 
   void _filterAnswers(String input, int index) {
-    setState(() {
-      activeTextFieldIndex = index;
-      if (input.trim().isEmpty) {
-        filteredAnswers = [];
-      } else {
-        filteredAnswers = possibleAnswers
-            .where((answer) =>
-                answer.toLowerCase().startsWith(input.trim().toLowerCase()))
-            .toList();
-      }
-    });
+    if (mounted) {
+      setState(() {
+        activeTextFieldIndex = index;
+        if (input.trim().isEmpty) {
+          filteredAnswers = [];
+        } else {
+          filteredAnswers = possibleAnswers
+              .where((answer) =>
+              answer.toLowerCase().contains(input.trim().toLowerCase()))
+              .toList();
+        }
+      });
+    }
   }
 
   void _clearFilteredAnswers() {
-    setState(() {
-      filteredAnswers = [];
-      activeTextFieldIndex = -1;
+    if (mounted) {
+      setState(() {
+        filteredAnswers = [];
+        activeTextFieldIndex = -1;
+      });
+    }
+  }
+
+  Timer? _checkLastVisitTimer;
+
+  @override
+  void dispose() {
+    // newCode
+    _storeLastVisitTimestamp();
+    _checkLastVisitTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _storeLastVisitTimestamp() async {
+    // newCode
+    final currentTime = DateTime.now().millisecondsSinceEpoch;
+    await GamingCacheHelper.saveData(key: "lastVisitTimestampToRandom", value: currentTime);
+  }
+
+  Future<void> _checkLastVisit() async {
+    _checkLastVisitTimer = Timer(Duration.zero, () async {
+      final lastVisit = GamingCacheHelper.getData(key: "lastVisitTimestampToRandom") ?? 0;
+      final currentTime = DateTime.now().millisecondsSinceEpoch;
+
+      if (currentTime - lastVisit < 12 * 60 * 60 * 1000) {
+        if (mounted) {
+          Fluttertoast.showToast(
+            msg: "You can only access this screen once every 12 hours.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+          );
+          Navigator.of(context).pop();
+        }
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    int userScore = GamingCacheHelper.getData(key: "lastScore") ?? 0;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppTheme.screenBackgroundColor,
@@ -232,7 +306,10 @@ class _SuperRandomQuestionsScreenState
                               )
                             ]),
                           ),
-
+                          Text("Your score is $userScore", style:  TextStyle(
+                              color: AppTheme.orangeColor,
+                              fontWeight: FontWeight.w800,fontSize: AppTheme.fontSize18(context)),),
+                          const SizedBox(height: 10),
 
                           const SizedBox(height: 10),
                           ClueTimer(

@@ -14,6 +14,7 @@ import 'package:super_app/modules/Ordering_Notifications/features/ordering/prese
 import 'package:super_app/modules/Ordering_Notifications/features/products/presentation/bloc/bloc/products_bloc.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/profile/presentation/screens/profile_screen.dart';
 import 'package:super_app/modules/Ordering_Notifications/features/service_booking_history/presentation/bloc/bloc/service_booking_history_bloc.dart';
+import 'package:super_app/modules/gaming/gaming_cache_helper.dart';
 import 'package:super_app/modules/services/domain/useCase/getServicesCategories_useCase.dart';
 import 'package:super_app/modules/services/domain/useCase/serviceProvider_useCase.dart';
 import 'package:super_app/modules/services/screens/AgentService/agentServiceDetails.dart';
@@ -32,6 +33,7 @@ void main() async {
   await Firebase.initializeApp();
   await CacheHelper.init();
   await AppConstants.initAppConstants();
+  await GamingCacheHelper.init();
   // await TokenGetter.getToken();
   runApp(const MyApp());
 }
